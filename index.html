@@ -12,9 +12,6 @@
     <meta
         name="theme-color"
         content="#123f38">
-    <link
-    rel="manifest"
-    href="manifest.json">
 
     <title>CasaStock</title>
 
@@ -27,6 +24,10 @@
         src="https://unpkg.com/html5-qrcode"
         type="text/javascript">
     </script>
+
+    <script
+    src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js">
+</script>
 
 </head>
 
@@ -45,14 +46,12 @@
         class="pantalla pantalla-inicial">
 
 
-        <div class="logo-casa">
-            🏠 <span>♥</span>
-        </div>
+       <div class="logo-casa">
+    <img src="logo sin fondo.png" alt="Logo CasaStock">
+</div>
 
 
-        <h1>
-            CasaStock
-        </h1>
+      <h1><span class="titulo-casa">Casa</span><span class="titulo-stock">Stock</span></h1>
 
 
         <p id="textoAuth">
@@ -549,6 +548,24 @@
                 📷 Abrir cámara
 
             </button>
+
+            <button
+    id="botonLeerTicket"
+    type="button"
+    class="btn-secundario"
+    onclick="abrirLectorTicket()">
+
+    🧾 Leer ticket
+
+</button>
+
+<input
+    id="inputTicket"
+    type="file"
+    accept="image/*"
+    capture="environment"
+    class="oculto"
+    onchange="procesarTicket(event)">
 
 
             <button
@@ -1238,23 +1255,6 @@
 <script
     type="module"
     src="script.js">
-</script>
-
-    <script>
-    if ("serviceWorker" in navigator) {
-        window.addEventListener("load", () => {
-            navigator.serviceWorker.register("./service-worker.js")
-                .then(() => {
-                    console.log("CasaStock: aplicación lista");
-                })
-                .catch((error) => {
-                    console.error(
-                        "CasaStock: error al registrar la aplicación",
-                        error
-                    );
-                });
-        });
-    }
 </script>
 
 
