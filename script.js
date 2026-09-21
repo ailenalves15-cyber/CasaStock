@@ -3264,7 +3264,6 @@ async function manejarLecturaScanner(
             ultimoMomentoEscaneado <
             2500
     ) {
-
         return;
     }
 
@@ -3282,10 +3281,22 @@ async function manejarLecturaScanner(
 
     try {
 
+        // Avisar que se detectó el código
         mostrarMensajeScanner(
-            `Código detectado: ${codigo}`
+            `✅ Código detectado: ${codigo}`
         );
 
+        // CERRAR LA CÁMARA INMEDIATAMENTE
+        await detenerScanner();
+
+        // Esperar un momento para que se cierre
+        // correctamente la cámara
+        await new Promise(
+            (resolve) =>
+                setTimeout(resolve, 300)
+        );
+
+        // Procesar el producto
         await procesarCodigoEscaneado(
             codigo
         );
