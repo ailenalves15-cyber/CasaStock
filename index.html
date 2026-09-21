@@ -13,21 +13,54 @@
         name="theme-color"
         content="#123f38">
 
+    <meta
+        name="mobile-web-app-capable"
+        content="yes">
+
+    <meta
+        name="apple-mobile-web-app-capable"
+        content="yes">
+
+    <meta
+        name="apple-mobile-web-app-status-bar-style"
+        content="black-translucent">
+
+    <meta
+        name="apple-mobile-web-app-title"
+        content="CasaStock">
+
+    <link
+        rel="manifest"
+        href="manifest.json">
+
+    <link
+        rel="apple-touch-icon"
+        href="logo 1.png">
+
     <title>CasaStock</title>
 
     <link
         rel="stylesheet"
         href="style.css">
 
-    <!-- Lector de códigos de barras -->
+
+    <!-- =====================================================
+         LECTOR DE CÓDIGOS DE BARRAS
+    ====================================================== -->
+
     <script
         src="https://unpkg.com/html5-qrcode"
         type="text/javascript">
     </script>
 
+
+    <!-- =====================================================
+         TESSERACT OCR
+    ====================================================== -->
+
     <script
-    src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js">
-</script>
+        src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js">
+    </script>
 
 </head>
 
@@ -46,12 +79,18 @@
         class="pantalla pantalla-inicial">
 
 
-       <div class="logo-casa">
-    <img src="logo sin fondo.png" alt="Logo CasaStock">
-</div>
+        <div class="logo-casa">
+
+            <img
+                src="logo sin fondo.png"
+                alt="Logo CasaStock">
+
+        </div>
 
 
-      <h1><span class="titulo-casa">Casa</span><span class="titulo-stock">Stock</span></h1>
+        <h1>
+            <span class="titulo-casa">Casa</span><span class="titulo-stock">Stock</span>
+        </h1>
 
 
         <p id="textoAuth">
@@ -230,34 +269,43 @@
         class="oculto">
 
 
-       <!-- =================================================
-     HEADER
-================================================== -->
+        <!-- =================================================
+             HEADER
+        ================================================== -->
 
-<header class="header">
+        <header class="header">
 
-    <button
-        type="button"
-        class="boton-buscar"
-        onclick="abrirBusqueda()"
-        aria-label="Buscar productos">
 
-        🔍
-        <span>Buscar productos</span>
+            <button
+                type="button"
+                class="boton-buscar"
+                onclick="abrirBusqueda()"
+                aria-label="Buscar productos">
 
-    </button>
+                🔍
 
-<button
-    type="button"
-    class="boton-salir"
-    onclick="cerrarSesion()"
-    aria-label="Cerrar sesión">
+                <span>
+                    Buscar productos
+                </span>
 
-    <span>Cerrar sesión</span>
+            </button>
 
-</button>
 
-</header>
+            <button
+                type="button"
+                class="boton-salir"
+                onclick="cerrarSesion()"
+                aria-label="Cerrar sesión">
+
+                <span>
+                    Cerrar sesión
+                </span>
+
+            </button>
+
+        </header>
+
+
 
         <!-- =================================================
              INICIO
@@ -270,7 +318,9 @@
 
             <div class="bienvenida">
 
-               <h2>Hola <span id="nombreUsuario">Usuario</span> 👋</h2>
+                <h2>
+                    Hola <span id="nombreUsuario">Usuario</span> 👋
+                </h2>
 
 
                 <p>
@@ -369,7 +419,9 @@
                     class="accion"
                     onclick="mostrarPantalla('escanear')">
 
-                    <span>📷</span>
+                    <span>
+                        📷
+                    </span>
 
                     <strong>
                         Escanear
@@ -387,7 +439,9 @@
                     class="accion"
                     onclick="abrirFormularioProducto()">
 
-                    <span>➕</span>
+                    <span>
+                        ➕
+                    </span>
 
                     <strong>
                         Agregar producto
@@ -405,7 +459,9 @@
                     class="accion"
                     onclick="mostrarPantalla('stock')">
 
-                    <span>📦</span>
+                    <span>
+                        📦
+                    </span>
 
                     <strong>
                         Ver stock
@@ -423,7 +479,9 @@
                     class="accion"
                     onclick="mostrarPantalla('lista')">
 
-                    <span>🛒</span>
+                    <span>
+                        🛒
+                    </span>
 
                     <strong>
                         Lista de compras
@@ -548,23 +606,25 @@
 
             </button>
 
+
             <button
-    id="botonLeerTicket"
-    type="button"
-    class="btn-secundario"
-    onclick="abrirLectorTicket()">
+                id="botonLeerTicket"
+                type="button"
+                class="btn-secundario"
+                onclick="abrirLectorTicket()">
 
-    🧾 Leer ticket
+                🧾 Leer ticket
 
-</button>
+            </button>
 
-<input
-    id="inputTicket"
-    type="file"
-    accept="image/*"
-    capture="environment"
-    class="oculto"
-    onchange="procesarTicket(event)">
+
+            <input
+                id="inputTicket"
+                type="file"
+                accept="image/*"
+                capture="environment"
+                class="oculto"
+                onchange="procesarTicket(event)">
 
 
             <button
@@ -1254,6 +1314,42 @@
 <script
     type="module"
     src="script.js">
+</script>
+
+
+
+<!-- =====================================================
+     SERVICE WORKER
+====================================================== -->
+
+<script>
+
+    if ("serviceWorker" in navigator) {
+
+        window.addEventListener("load", () => {
+
+            navigator.serviceWorker
+                .register("./sw.js")
+                .then(() => {
+
+                    console.log(
+                        "CasaStock: Service Worker registrado correctamente."
+                    );
+
+                })
+                .catch((error) => {
+
+                    console.error(
+                        "CasaStock: error registrando Service Worker:",
+                        error
+                    );
+
+                });
+
+        });
+
+    }
+
 </script>
 
 
