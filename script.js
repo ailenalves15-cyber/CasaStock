@@ -3464,59 +3464,12 @@ async function procesarCodigoEscaneado(
 
     if (producto) {
 
-        if (
-            modoScanner ===
-            "agregar"
-        ) {
+        // Cerrar el escáner
+        await detenerScanner();
 
-            producto.cantidad =
-                (
-                    Number(
-                        producto.cantidad
-                    ) || 0
-                ) + 1;
-
-        } else {
-
-            producto.cantidad =
-                Math.max(
-                    0,
-                    (
-                        Number(
-                            producto.cantidad
-                        ) || 0
-                    ) - 1
-                );
-        }
-
-        producto.actualizado =
-            new Date().toISOString();
-
-        await guardarProductoFirebase(
-            producto
-        );
-
-        renderizarTodo();
-
-        mostrarMensajeScanner(
-
-            modoScanner === "agregar"
-
-                ? `✅ Agregado: ${producto.nombre}`
-
-                : `✅ Usado: ${producto.nombre}`
-        );
-
-        if (
-            modoScanner === "usar" &&
-            Number(producto.cantidad) <=
-            Number(producto.minimo)
-        ) {
-
-            await agregarProductoACompras(
-                producto
-            );
-        }
+        // Abrir el formulario con los datos
+        // del producto escaneado
+        abrirFormularioProducto(producto);
 
         return;
     }
