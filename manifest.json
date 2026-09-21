@@ -1,7 +1,9 @@
 {
   "name": "CasaStock",
   "short_name": "CasaStock",
-  "start_url": "./",
+  "description": "Gestión del stock de alimentos del hogar",
+  "start_url": "/CasaStock/",
+  "scope": "/CasaStock/",
   "display": "standalone",
   "background_color": "#181a1a",
   "theme_color": "#123f38",
@@ -9,14 +11,14 @@
   "lang": "es",
   "icons": [
     {
-      "src": "192.jpg",
+      "src": "/CasaStock/192.jpg",
       "sizes": "192x192",
-      "type": "image/jpg"
+      "type": "image/jpeg"
     },
     {
-      "src": "512.jpg",
+      "src": "/CasaStock/512.jpg",
       "sizes": "512x512",
-      "type": "image/jpg"
+      "type": "image/jpeg"
     }
   ]
 }
