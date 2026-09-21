@@ -2139,3 +2139,37 @@ img {
         min-height: 42px;
     }
 }
+
+.icono-salir {
+    position: relative;
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+}
+
+.icono-salir::before {
+    content: "";
+    position: absolute;
+    top: -3px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 9px;
+    background: currentColor;
+    border-radius: 0 0 4px 4px;
+}
+
+.icono-salir::after {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 9px;
+    background: currentColor;
+    border-radius: 2px;
+}
+
