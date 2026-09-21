@@ -8,7 +8,9 @@ import {
     signInWithEmailAndPassword,
     signOut,
     onAuthStateChanged,
-    updateProfile
+    updateProfile,
+    setPersistence,
+    inMemoryPersistence
 } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
 
 import {
@@ -96,7 +98,7 @@ document.addEventListener(
     iniciarAplicacion
 );
 
-function iniciarAplicacion() {
+async function iniciarAplicacion() {
 
     prepararCategorias();
     prepararFormulario();
@@ -104,6 +106,29 @@ function iniciarAplicacion() {
     prepararAutenticacion();
 
     seleccionarModoScanner("agregar");
+
+    /*
+     * IMPORTANTE:
+     * No guardamos la sesión de Firebase.
+     *
+     * Esto significa que al cerrar/reabrir CasaStock
+     * se deberá iniciar sesión nuevamente.
+     */
+
+    try {
+
+        await setPersistence(
+            auth,
+            inMemoryPersistence
+        );
+
+    } catch (error) {
+
+        console.error(
+            "No se pudo configurar la persistencia de Firebase:",
+            error
+        );
+    }
 
     /*
      * MUY IMPORTANTE:
@@ -1149,10 +1174,15 @@ async function cerrarSesion() {
         await signOut(auth);
 
         /*
-         * Ocultamos la app inmediatamente.
-         * No esperamos a que la interfaz
-         * termine de reaccionar.
+         * Como usamos inMemoryPersistence,
+         * signOut elimina inmediatamente
+         * la sesión de la aplicación.
          */
+
+        usuarioActual = null;
+
+        productos = [];
+        listaCompras = [];
 
         const appPrincipal =
             document.getElementById(
