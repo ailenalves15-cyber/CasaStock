@@ -8,9 +8,7 @@ import {
     signInWithEmailAndPassword,
     signOut,
     onAuthStateChanged,
-    updateProfile,
-    setPersistence,
-    inMemoryPersistence
+    updateProfile
 } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
 
 import {
@@ -84,6 +82,9 @@ const categorias = [
     "Salsas",
     "Secos",
     "Conservas",
+    "Carnes",
+    "Frutas",
+    "Verduras",
     "Limpieza",
     "Elaboración propia",
     "Otros"
@@ -98,7 +99,7 @@ document.addEventListener(
     iniciarAplicacion
 );
 
-async function iniciarAplicacion() {
+function iniciarAplicacion() {
 
     prepararCategorias();
     prepararFormulario();
@@ -106,29 +107,6 @@ async function iniciarAplicacion() {
     prepararAutenticacion();
 
     seleccionarModoScanner("agregar");
-
-    /*
-     * IMPORTANTE:
-     * No guardamos la sesión de Firebase.
-     *
-     * Esto significa que al cerrar/reabrir CasaStock
-     * se deberá iniciar sesión nuevamente.
-     */
-
-    try {
-
-        await setPersistence(
-            auth,
-            inMemoryPersistence
-        );
-
-    } catch (error) {
-
-        console.error(
-            "No se pudo configurar la persistencia de Firebase:",
-            error
-        );
-    }
 
     /*
      * MUY IMPORTANTE:
@@ -1174,15 +1152,10 @@ async function cerrarSesion() {
         await signOut(auth);
 
         /*
-         * Como usamos inMemoryPersistence,
-         * signOut elimina inmediatamente
-         * la sesión de la aplicación.
+         * Ocultamos la app inmediatamente.
+         * No esperamos a que la interfaz
+         * termine de reaccionar.
          */
-
-        usuarioActual = null;
-
-        productos = [];
-        listaCompras = [];
 
         const appPrincipal =
             document.getElementById(
@@ -4139,6 +4112,1137 @@ function fechaHoy() {
 }
 
 // ======================================================
+// LECTOR DE TICKETS
+// ======================================================
+
+let procesandoTicket = false;
+
+
+// ------------------------------------------------------
+// ABRIR LECTOR DE TICKET
+// ------------------------------------------------------
+
+function abrirLectorTicket() {
+
+    if (procesandoTicket) {
+        return;
+    }
+
+    const input =
+        document.getElementById(
+            "inputTicket"
+        );
+
+    if (!input) {
+        alert(
+            "No se encontró el lector de tickets."
+        );
+        return;
+    }
+
+    input.value = "";
+
+    input.click();
+}
+
+
+// ------------------------------------------------------
+// PROCESAR FOTO DEL TICKET
+// ------------------------------------------------------
+
+async function procesarTicket(event) {
+
+    const archivo =
+        event?.target?.files?.[0];
+
+    if (!archivo) {
+        return;
+    }
+
+    if (
+        typeof window.Tesseract ===
+        "undefined"
+    ) {
+
+        alert(
+            "No se pudo cargar el lector de texto. Revisá tu conexión a Internet."
+        );
+
+        return;
+    }
+
+    if (procesandoTicket) {
+        return;
+    }
+
+    procesandoTicket = true;
+
+    const boton =
+        document.getElementById(
+            "botonLeerTicket"
+        );
+
+    if (boton) {
+
+        boton.disabled = true;
+
+        boton.textContent =
+            "⏳ Leyendo ticket...";
+    }
+
+    try {
+
+        mostrarPantalla(
+            "escanear"
+        );
+
+        mostrarMensajeScanner(
+            "🧾 Analizando el ticket..."
+        );
+
+        const resultado =
+            await Tesseract.recognize(
+                archivo,
+                "spa",
+                {
+                    logger:
+                        (informacion) => {
+
+                            if (
+                                informacion.status ===
+                                "recognizing text"
+                            ) {
+
+                                const progreso =
+                                    Math.round(
+                                        (
+                                            informacion.progress ||
+                                            0
+                                        ) * 100
+                                    );
+
+                                mostrarMensajeScanner(
+                                    `🧾 Leyendo ticket... ${progreso}%`
+                                );
+                            }
+                        }
+                }
+            );
+
+        const texto =
+            resultado?.data?.text || "";
+
+        console.log(
+            "Texto detectado en ticket:",
+            texto
+        );
+
+        const datos =
+            extraerProductoYCantidadTicket(
+                texto
+            );
+
+        if (!datos) {
+
+            mostrarMensajeScanner(
+                "No pudimos identificar el producto y el peso. Probá con una foto más clara."
+            );
+
+            alert(
+                "No pude identificar el producto y la cantidad del ticket.\n\nProbá sacar una foto más cerca y con buena luz."
+            );
+
+            return;
+        }
+
+        mostrarResultadoTicket(
+            datos,
+            texto
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Error leyendo ticket:",
+            error
+        );
+
+        mostrarMensajeScanner(
+            "No se pudo leer el ticket."
+        );
+
+        alert(
+            "No se pudo leer el ticket. Probá nuevamente con una foto más clara."
+        );
+
+    } finally {
+
+        procesandoTicket = false;
+
+        if (boton) {
+
+            boton.disabled = false;
+
+            boton.textContent =
+                "🧾 Leer ticket";
+        }
+
+        if (event?.target) {
+
+            event.target.value = "";
+        }
+    }
+}
+
+
+// ------------------------------------------------------
+// EXTRAER PRODUCTO + CANTIDAD
+// ------------------------------------------------------
+
+function extraerProductoYCantidadTicket(
+    texto
+) {
+
+    if (!texto) {
+        return null;
+    }
+
+    const lineas =
+        texto
+            .split(/\r?\n/)
+            .map(
+                linea =>
+                    linea
+                        .replace(
+                            /\s+/g,
+                            " "
+                        )
+                        .trim()
+            )
+            .filter(
+                linea =>
+                    linea.length >= 3
+            );
+
+    /*
+     * Buscamos líneas que tengan:
+     *
+     * PRODUCTO + KG
+     * PRODUCTO + G
+     * PRODUCTO + GR
+     *
+     * Ejemplos:
+     *
+     * VACIO 1,250 KG
+     * MANZANA ROJA 2.350 KG
+     * PAPA 1500 G
+     */
+
+    const patrones = [
+
+        /(.+?)\s+(\d+(?:[.,]\d+)?)\s*(kg|kgs|kilo|kilos)\b/i,
+
+        /(.+?)\s+(\d+(?:[.,]\d+)?)\s*(g|gr|grs|gramos)\b/i
+
+    ];
+
+    for (
+        const linea of lineas
+    ) {
+
+        /*
+         * Primero eliminamos algunos
+         * símbolos que suelen aparecer
+         * por errores del OCR.
+         */
+
+        const limpia =
+            linea
+                .replace(
+                    /[$€£]/g,
+                    " "
+                )
+                .replace(
+                    /\s+/g,
+                    " "
+                )
+                .trim();
+
+        for (
+            const patron of patrones
+        ) {
+
+            const coincidencia =
+                limpia.match(
+                    patron
+                );
+
+            if (!coincidencia) {
+                continue;
+            }
+
+            let nombre =
+                coincidencia[1]
+                    .trim();
+
+            let cantidadTexto =
+                coincidencia[2];
+
+            const unidad =
+                coincidencia[3]
+                    .toLowerCase();
+
+            /*
+             * Convertimos coma decimal
+             * en punto.
+             */
+
+            let cantidad =
+                Number(
+                    cantidadTexto
+                        .replace(
+                            ",",
+                            "."
+                        )
+                );
+
+            if (
+                !Number.isFinite(
+                    cantidad
+                ) ||
+                cantidad <= 0
+            ) {
+
+                continue;
+            }
+
+            /*
+             * Si está expresado en gramos,
+             * convertimos a kilogramos.
+             */
+
+            if (
+                unidad === "g" ||
+                unidad === "gr" ||
+                unidad === "grs" ||
+                unidad === "gramos"
+            ) {
+
+                cantidad =
+                    cantidad / 1000;
+            }
+
+            /*
+             * Limpiamos el nombre.
+             */
+
+            nombre =
+                limpiarNombreProductoTicket(
+                    nombre
+                );
+
+            if (
+                !nombre ||
+                nombre.length < 2
+            ) {
+
+                continue;
+            }
+
+            /*
+             * Evitamos interpretar como producto
+             * palabras claramente relacionadas
+             * con precios o totales.
+             */
+
+            if (
+                parecePrecioOTotal(
+                    nombre
+                )
+            ) {
+
+                continue;
+            }
+
+            return {
+
+                nombre,
+
+                cantidad:
+
+                    redondearCantidad(
+                        cantidad
+                    ),
+
+                unidad: "kg",
+
+                textoOriginal:
+                    linea
+            };
+        }
+    }
+
+    /*
+     * Segundo intento:
+     *
+     * Algunos tickets imprimen:
+     *
+     * VACIO
+     * 1,250 KG
+     *
+     * En ese caso buscamos una línea de
+     * producto seguida por una línea de peso.
+     */
+
+    for (
+        let i = 0;
+        i < lineas.length - 1;
+        i++
+    ) {
+
+        const nombreLinea =
+            limpiarNombreProductoTicket(
+                lineas[i]
+            );
+
+        const pesoLinea =
+            lineas[i + 1];
+
+        const coincidencia =
+            pesoLinea.match(
+                /^(\d+(?:[.,]\d+)?)\s*(kg|kgs|kilo|kilos|g|gr|grs|gramos)\b/i
+            );
+
+        if (!coincidencia) {
+            continue;
+        }
+
+        if (
+            parecePrecioOTotal(
+                nombreLinea
+            )
+        ) {
+            continue;
+        }
+
+        let cantidad =
+            Number(
+                coincidencia[1]
+                    .replace(
+                        ",",
+                        "."
+                    )
+            );
+
+        if (
+            !Number.isFinite(
+                cantidad
+            ) ||
+            cantidad <= 0
+        ) {
+            continue;
+        }
+
+        const unidad =
+            coincidencia[2]
+                .toLowerCase();
+
+        if (
+            unidad === "g" ||
+            unidad === "gr" ||
+            unidad === "grs" ||
+            unidad === "gramos"
+        ) {
+
+            cantidad =
+                cantidad / 1000;
+        }
+
+        if (
+            nombreLinea.length < 2
+        ) {
+            continue;
+        }
+
+        return {
+
+            nombre:
+                nombreLinea,
+
+            cantidad:
+                redondearCantidad(
+                    cantidad
+                ),
+
+            unidad: "kg",
+
+            textoOriginal:
+                `${lineas[i]} ${lineas[i + 1]}`
+        };
+    }
+
+    return null;
+}
+
+
+// ------------------------------------------------------
+// LIMPIAR NOMBRE
+// ------------------------------------------------------
+
+function limpiarNombreProductoTicket(
+    nombre
+) {
+
+    let resultado =
+        String(
+            nombre || ""
+        );
+
+    /*
+     * Eliminamos símbolos típicos
+     * del ticket.
+     */
+
+    resultado =
+        resultado
+            .replace(
+                /^[^A-Za-zÁÉÍÓÚáéíóúÑñ]+/,
+                ""
+            )
+            .replace(
+                /[^A-Za-zÁÉÍÓÚáéíóúÑñ0-9\s-]+$/,
+                ""
+            )
+            .replace(
+                /\s+/g,
+                " "
+            )
+            .trim();
+
+    /*
+     * Eliminamos números que puedan
+     * ser códigos al comienzo.
+     */
+
+    resultado =
+        resultado.replace(
+            /^\d{3,}\s+/,
+            ""
+        );
+
+    /*
+     * Evitamos que el OCR devuelva
+     * palabras de precio.
+     */
+
+    resultado =
+        resultado
+            .replace(
+                /\b(precio|total|importe|subtotal|efectivo|tarjeta|vuelto)\b/gi,
+                ""
+            )
+            .replace(
+                /\s+/g,
+                " "
+            )
+            .trim();
+
+    /*
+     * Capitalización sencilla.
+     */
+
+    if (resultado) {
+
+        resultado =
+            resultado
+                .toLowerCase()
+                .replace(
+                    /(^|\s)([a-záéíóúñ])/g,
+                    (
+                        coincidencia,
+                        espacio,
+                        letra
+                    ) =>
+                        espacio +
+                        letra.toUpperCase()
+                );
+    }
+
+    return resultado;
+}
+
+
+// ------------------------------------------------------
+// FILTRAR PRECIOS
+// ------------------------------------------------------
+
+function parecePrecioOTotal(
+    texto
+) {
+
+    const valor =
+        String(
+            texto || ""
+        ).toLowerCase();
+
+    const palabrasProhibidas = [
+
+        "total",
+        "subtotal",
+        "precio",
+        "importe",
+        "efectivo",
+        "tarjeta",
+        "vuelto",
+        "cambio",
+        "iva",
+        "descuento"
+    ];
+
+    return palabrasProhibidas.some(
+        palabra =>
+            valor.includes(
+                palabra
+            )
+    );
+}
+
+
+// ------------------------------------------------------
+// REDONDEAR CANTIDAD
+// ------------------------------------------------------
+
+function redondearCantidad(
+    cantidad
+) {
+
+    return Math.round(
+        cantidad * 1000
+    ) / 1000;
+}
+
+
+// ------------------------------------------------------
+// DETECTAR CATEGORÍA
+// ------------------------------------------------------
+
+function detectarCategoriaTicket(
+    nombre
+) {
+
+    const texto =
+        String(
+            nombre || ""
+        )
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(
+                /[\u0300-\u036f]/g,
+                ""
+            );
+
+    /*
+     * CARNES
+     */
+
+    const carnes = [
+
+        "asado",
+        "vacio",
+        "vacío",
+        "entraña",
+        "entraña",
+        "bife",
+        "chorizo",
+        "peceto",
+        "nalga",
+        "paleta",
+        "roast beef",
+        "roastbeef",
+        "colita",
+        "cuadril",
+        "bola de lomo",
+        "lomo",
+        "matambre",
+        "osobuco",
+        "carne picada",
+        "carne molida",
+        "tapa de asado",
+        "tortuguita",
+        "falda",
+        "bondiola",
+        "costeleta",
+        "costilla",
+        "pollo",
+        "pechuga",
+        "muslo",
+        "pata muslo",
+        "suprema",
+        "alitas"
+    ];
+
+    if (
+        carnes.some(
+            palabra =>
+                texto.includes(
+                    palabra
+                )
+        )
+    ) {
+
+        return "Carnes";
+    }
+
+    /*
+     * FRUTAS
+     */
+
+    const frutas = [
+
+        "manzana",
+        "banana",
+        "pera",
+        "naranja",
+        "mandarina",
+        "limon",
+        "limón",
+        "pomelo",
+        "frutilla",
+        "durazno",
+        "ciruela",
+        "uva",
+        "kiwi",
+        "melon",
+        "melón",
+        "sandia",
+        "sandía",
+        "ananá",
+        "anana",
+        "palta"
+    ];
+
+    if (
+        frutas.some(
+            palabra =>
+                texto.includes(
+                    palabra
+                )
+        )
+    ) {
+
+        return "Frutas";
+    }
+
+    /*
+     * VERDURAS
+     */
+
+    const verduras = [
+
+        "papa",
+        "batata",
+        "cebolla",
+        "tomate",
+        "zanahoria",
+        "zapallo",
+        "zapallito",
+        "berenjena",
+        "morron",
+        "morrón",
+        "lechuga",
+        "espinaca",
+        "acelga",
+        "brocoli",
+        "brócoli",
+        "coliflor",
+        "pepino",
+        "remolacha",
+        "apio",
+        "ajo"
+    ];
+
+    if (
+        verduras.some(
+            palabra =>
+                texto.includes(
+                    palabra
+                )
+        )
+    ) {
+
+        return "Verduras";
+    }
+
+    return "Otros";
+}
+
+
+// ------------------------------------------------------
+// MOSTRAR RESULTADO
+// ------------------------------------------------------
+
+function mostrarResultadoTicket(
+    datos,
+    textoOCR
+) {
+
+    const modal =
+        document.getElementById(
+            "modal"
+        );
+
+    const contenido =
+        document.getElementById(
+            "contenidoModal"
+        );
+
+    if (!modal || !contenido) {
+        return;
+    }
+
+    const categoria =
+        detectarCategoriaTicket(
+            datos.nombre
+        );
+
+    contenido.innerHTML = `
+
+        <div class="resultado-ticket">
+
+            <h2>
+                🧾 Producto detectado
+            </h2>
+
+            <p style="margin: 10px 0 20px;">
+                Revisá los datos antes de agregarlos
+                al stock.
+            </p>
+
+            <label
+                for="ticketProducto">
+                Producto / corte
+            </label>
+
+            <input
+                id="ticketProducto"
+                type="text"
+                value="${escaparHTML(
+                    datos.nombre
+                )}"
+                style="
+                    width:100%;
+                    padding:12px;
+                    margin:6px 0 14px;
+                    border:1px solid #d6dadd;
+                    border-radius:12px;
+                    font-size:16px;
+                ">
+
+            <label
+                for="ticketCantidad">
+                Cantidad
+            </label>
+
+            <div
+                style="
+                    display:flex;
+                    gap:8px;
+                    align-items:center;
+                    margin-top:6px;
+                ">
+
+                <input
+                    id="ticketCantidad"
+                    type="number"
+                    min="0.001"
+                    step="0.001"
+                    value="${datos.cantidad}"
+                    style="
+                        flex:1;
+                        min-width:0;
+                        padding:12px;
+                        border:1px solid #d6dadd;
+                        border-radius:12px;
+                        font-size:16px;
+                    ">
+
+                <strong>
+                    kg
+                </strong>
+
+            </div>
+
+            <p
+                style="
+                    margin-top:12px;
+                    font-size:12px;
+                    color:#777;
+                ">
+                Categoría detectada:
+                <strong>
+                    ${escaparHTML(
+                        categoria
+                    )}
+                </strong>
+            </p>
+
+            <div
+                style="
+                    display:flex;
+                    gap:8px;
+                    margin-top:20px;
+                ">
+
+                <button
+                    type="button"
+                    class="btn-secundario"
+                    onclick="cerrarModal()">
+
+                    Cancelar
+
+                </button>
+
+                <button
+                    type="button"
+                    class="btn-principal"
+                    onclick="confirmarProductoTicket()">
+
+                    ✓ Agregar al stock
+
+                </button>
+
+            </div>
+
+        </div>
+    `;
+
+    modal.classList.remove(
+        "oculto"
+    );
+
+    mostrarMensajeScanner(
+        "Revisá el producto y la cantidad."
+    );
+}
+
+
+// ------------------------------------------------------
+// CONFIRMAR TICKET
+// ------------------------------------------------------
+
+async function confirmarProductoTicket() {
+
+    const nombreInput =
+        document.getElementById(
+            "ticketProducto"
+        );
+
+    const cantidadInput =
+        document.getElementById(
+            "ticketCantidad"
+        );
+
+    const nombre =
+        nombreInput
+            ?.value
+            .trim();
+
+    const cantidad =
+        Number(
+            cantidadInput
+                ?.value
+        );
+
+    if (!nombre) {
+
+        alert(
+            "Ingresá el nombre del producto."
+        );
+
+        return;
+    }
+
+    if (
+        !Number.isFinite(cantidad) ||
+        cantidad <= 0
+    ) {
+
+        alert(
+            "Ingresá una cantidad válida."
+        );
+
+        return;
+    }
+
+    const categoria =
+        detectarCategoriaTicket(
+            nombre
+        );
+
+    /*
+     * Buscamos si ya existe un producto
+     * con el mismo nombre.
+     */
+
+    const productoExistente =
+        productos.find(
+            producto =>
+                normalizarTexto(
+                    producto.nombre
+                ) ===
+                normalizarTexto(
+                    nombre
+                )
+        );
+
+    try {
+
+        if (productoExistente) {
+
+            /*
+             * Si ya existe, sumamos el peso.
+             */
+
+            productoExistente.cantidad =
+                (
+                    Number(
+                        productoExistente.cantidad
+                    ) || 0
+                ) + cantidad;
+
+            productoExistente.unidad =
+                "kg";
+
+            productoExistente.presentacion =
+                "kg";
+
+            productoExistente.categoria =
+                categoria !== "Otros"
+                    ? categoria
+                    : (
+                        productoExistente.categoria ||
+                        "Otros"
+                    );
+
+            productoExistente.actualizado =
+                new Date().toISOString();
+
+            await guardarProductoFirebase(
+                productoExistente
+            );
+
+            mostrarMensajeScanner(
+                `✅ Agregado: ${nombre} (+${cantidad} kg)`
+            );
+
+        } else {
+
+            /*
+             * Si no existe, creamos uno nuevo.
+             */
+
+            const producto = {
+
+                id:
+                    generarId(),
+
+                nombre,
+
+                categoria,
+
+                fechaElaboracion:
+                    "",
+
+                duracionElaboracion:
+                    "",
+
+                tipoPresentacion:
+                    "Peso",
+
+                presentacion:
+                    "kg",
+
+                codigo:
+                    "",
+
+                cantidad:
+                    redondearCantidad(
+                        cantidad
+                    ),
+
+                minimo:
+                    1,
+
+                vencimiento:
+                    "",
+
+                unidad:
+                    "kg",
+
+                actualizado:
+                    new Date().toISOString()
+            };
+
+            await guardarProductoFirebase(
+                producto
+            );
+
+            productos.push(
+                producto
+            );
+
+            mostrarMensajeScanner(
+                `✅ Agregado: ${nombre} (${cantidad} kg)`
+            );
+        }
+
+        cerrarModal();
+
+        renderizarTodo();
+
+        mostrarPantalla(
+            "stock"
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Error guardando producto del ticket:",
+            error
+        );
+
+        alert(
+            "No se pudo guardar el producto."
+        );
+    }
+}
+
+
+// ------------------------------------------------------
+// NORMALIZAR TEXTO
+// ------------------------------------------------------
+
+function normalizarTexto(
+    texto
+) {
+
+    return String(
+        texto || ""
+    )
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(
+            /[\u0300-\u036f]/g,
+            ""
+        )
+        .replace(
+            /\s+/g,
+            " "
+        )
+        .trim();
+}
+
+// ======================================================
 // FUNCIONES DISPONIBLES PARA EL HTML
 // ======================================================
 
@@ -4222,3 +5326,12 @@ window.cerrarModal =
 
 window.mostrarCamposElaboracion =
     mostrarCamposElaboracion;
+
+window.abrirLectorTicket =
+    abrirLectorTicket;
+
+window.procesarTicket =
+    procesarTicket;
+
+window.confirmarProductoTicket =
+    confirmarProductoTicket;
