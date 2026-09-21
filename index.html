@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <meta
+        name="theme-color"
+        content="#123f38">
+
+    <title>CasaStock</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css">
+
+    <!-- Lector de códigos de barras -->
+    <script
+        src="https://unpkg.com/html5-qrcode"
+        type="text/javascript">
+    </script>
+
+</head>
+
+
+<body>
+
+<div id="app">
+
+
+    <!-- =====================================================
+         AUTENTICACIÓN
+    ====================================================== -->
+
+    <section
+        id="pantallaAuth"
+        class="pantalla pantalla-inicial">
+
+
+        <div class="logo-casa">
+            🏠 <span>♥</span>
+        </div>
+
+
+        <h1>
+            CasaStock
+        </h1>
+
+
+        <p id="textoAuth">
+            Todo lo que tenés en casa, bajo control.
+        </p>
+
+
+
+        <!-- =================================================
+             LOGIN
+        ================================================== -->
+
+        <div
+            id="formLogin"
+            class="bloque-auth">
+
+
+            <h2>
+                Iniciar sesión
+            </h2>
+
+
+            <label for="loginEmail">
+                Email
+            </label>
+
+
+            <input
+                id="loginEmail"
+                type="email"
+                placeholder="tu@email.com"
+                autocomplete="email">
+
+
+            <label for="loginPassword">
+                Contraseña
+            </label>
+
+
+            <input
+                id="loginPassword"
+                type="password"
+                placeholder="Tu contraseña"
+                autocomplete="current-password">
+
+
+            <button
+                type="button"
+                class="btn-principal grande"
+                onclick="iniciarSesion()">
+
+                Ingresar
+
+            </button>
+
+
+            <p
+                id="mensajeLogin"
+                class="mensaje-auth">
+            </p>
+
+
+            <button
+                type="button"
+                class="btn-link"
+                onclick="mostrarRegistro()">
+
+                ¿Todavía no tenés una cuenta?
+                <strong>Crear cuenta</strong>
+
+            </button>
+
+        </div>
+
+
+
+        <!-- =================================================
+             REGISTRO
+        ================================================== -->
+
+        <div
+            id="formRegistro"
+            class="bloque-auth oculto">
+
+
+            <h2>
+                Crear cuenta
+            </h2>
+
+
+            <label for="registroNombre">
+                Tu nombre
+            </label>
+
+
+            <input
+                id="registroNombre"
+                type="text"
+                placeholder="Ej: Laura"
+                autocomplete="name">
+
+
+            <label for="registroEmail">
+                Email
+            </label>
+
+
+            <input
+                id="registroEmail"
+                type="email"
+                placeholder="tu@email.com"
+                autocomplete="email">
+
+
+            <label for="registroPassword">
+                Contraseña
+            </label>
+
+
+            <input
+                id="registroPassword"
+                type="password"
+                placeholder="Mínimo 6 caracteres"
+                autocomplete="new-password">
+
+
+            <label for="registroPassword2">
+                Repetir contraseña
+            </label>
+
+
+            <input
+                id="registroPassword2"
+                type="password"
+                placeholder="Repetí tu contraseña"
+                autocomplete="new-password">
+
+
+            <button
+                type="button"
+                class="btn-principal grande"
+                onclick="crearCuenta()">
+
+                Crear cuenta
+
+            </button>
+
+
+            <p
+                id="mensajeRegistro"
+                class="mensaje-auth">
+            </p>
+
+
+            <button
+                type="button"
+                class="btn-link"
+                onclick="mostrarLogin()">
+
+                ← Ya tengo una cuenta
+
+            </button>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         APLICACIÓN
+    ====================================================== -->
+
+    <main
+        id="appPrincipal"
+        class="oculto">
+
+
+       <!-- =================================================
+     HEADER
+================================================== -->
+
+<header class="header">
+
+    <button
+        type="button"
+        class="boton-buscar"
+        onclick="abrirBusqueda()"
+        aria-label="Buscar productos">
+
+        🔍
+        <span>Buscar productos</span>
+
+    </button>
+
+
+    <button
+        type="button"
+        class="boton-salir"
+        onclick="cerrarSesion()">
+
+        <span>⏻</span>
+        <span>Cerrar sesión</span>
+
+    </button>
+
+</header>
+
+        <!-- =================================================
+             INICIO
+        ================================================== -->
+
+        <section
+            id="pantalla-inicio"
+            class="pantalla-contenido">
+
+
+            <div class="bienvenida">
+
+               <h2>Hola <span id="nombreUsuario">Usuario</span> 👋</h2>
+
+
+                <p>
+                    Revisá lo que tenés en casa
+                    y mantené tu stock organizado.
+                </p>
+
+            </div>
+
+
+
+            <div class="resumen-grid">
+
+
+                <div class="tarjeta-resumen">
+
+                    <span class="icono-resumen">
+                        📦
+                    </span>
+
+                    <strong id="cantidadProductos">
+                        0
+                    </strong>
+
+                    <span>
+                        Productos
+                    </span>
+
+                </div>
+
+
+                <div class="tarjeta-resumen">
+
+                    <span class="icono-resumen">
+                        🧮
+                    </span>
+
+                    <strong id="cantidadUnidades">
+                        0
+                    </strong>
+
+                    <span>
+                        Unidades
+                    </span>
+
+                </div>
+
+
+                <div class="tarjeta-resumen">
+
+                    <span class="icono-resumen">
+                        ⚠️
+                    </span>
+
+                    <strong id="cantidadAlertas">
+                        0
+                    </strong>
+
+                    <span>
+                        Alertas
+                    </span>
+
+                </div>
+
+
+                <div class="tarjeta-resumen">
+
+                    <span class="icono-resumen">
+                        🛒
+                    </span>
+
+                    <strong id="cantidadCompras">
+                        0
+                    </strong>
+
+                    <span>
+                        Para comprar
+                    </span>
+
+                </div>
+
+            </div>
+
+
+
+            <h3 class="titulo-seccion">
+                Acciones rápidas
+            </h3>
+
+
+            <div class="acciones-rapidas">
+
+
+                <button
+                    type="button"
+                    class="accion"
+                    onclick="mostrarPantalla('escanear')">
+
+                    <span>📷</span>
+
+                    <strong>
+                        Escanear
+                    </strong>
+
+                    <small>
+                        Agregar o usar
+                    </small>
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="accion"
+                    onclick="abrirFormularioProducto()">
+
+                    <span>➕</span>
+
+                    <strong>
+                        Agregar producto
+                    </strong>
+
+                    <small>
+                        Cargar manualmente
+                    </small>
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="accion"
+                    onclick="mostrarPantalla('stock')">
+
+                    <span>📦</span>
+
+                    <strong>
+                        Ver stock
+                    </strong>
+
+                    <small>
+                        Todos tus productos
+                    </small>
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="accion"
+                    onclick="mostrarPantalla('lista')">
+
+                    <span>🛒</span>
+
+                    <strong>
+                        Lista de compras
+                    </strong>
+
+                    <small>
+                        Lo que necesitás
+                    </small>
+
+                </button>
+
+            </div>
+
+
+
+            <div class="seccion-alertas">
+
+
+                <div class="pantalla-titulo">
+
+                    <h3>
+                        Alertas
+                    </h3>
+
+
+                    <button
+                        type="button"
+                        class="btn-pequeno"
+                        onclick="mostrarPantalla('vencimientos')">
+
+                        Ver todas
+
+                    </button>
+
+                </div>
+
+
+                <div id="listaAlertas"></div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             ESCANEAR
+        ================================================== -->
+
+        <section
+            id="pantalla-escanear"
+            class="pantalla-contenido oculto">
+
+
+            <div class="pantalla-titulo">
+
+                <div>
+
+                    <h2>
+                        Escanear producto
+                    </h2>
+
+                    <p>
+                        Usá la cámara para cargar o modificar
+                        tu stock.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="selector-modo">
+
+
+                <button
+                    id="modoAgregar"
+                    type="button"
+                    class="modo activo"
+                    onclick="seleccionarModoScanner('agregar')">
+
+                    ➕ Agregar
+
+                </button>
+
+
+                <button
+                    id="modoUsar"
+                    type="button"
+                    class="modo"
+                    onclick="seleccionarModoScanner('usar')">
+
+                    ➖ Usar
+
+                </button>
+
+            </div>
+
+
+            <div
+                id="lectorCodigo"
+                class="lector-codigo">
+            </div>
+
+
+            <div
+                id="mensajeScanner"
+                class="mensaje-scanner">
+
+                Tocá iniciar para usar la cámara.
+
+            </div>
+
+
+            <button
+                id="botonIniciarScanner"
+                type="button"
+                class="btn-principal"
+                onclick="iniciarScanner()">
+
+                📷 Abrir cámara
+
+            </button>
+
+
+            <button
+                id="botonDetenerScanner"
+                type="button"
+                class="btn-secundario oculto"
+                onclick="detenerScanner()">
+
+                Detener cámara
+
+            </button>
+
+
+            <div class="ayuda-scanner">
+
+                <p>
+                    📌 Si el producto ya está cargado,
+                    el stock se modificará automáticamente.
+                </p>
+
+                <p>
+                    📌 Si es un producto nuevo,
+                    podrás completar sus datos.
+                </p>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             STOCK
+        ================================================== -->
+
+        <section
+            id="pantalla-stock"
+            class="pantalla-contenido oculto">
+
+
+            <div class="pantalla-titulo">
+
+                <div>
+
+                    <h2>
+                        Mi stock
+                    </h2>
+
+                    <p>
+                        Todos tus productos
+                    </p>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="btn-pequeno"
+                    onclick="abrirFormularioProducto()">
+
+                    + Agregar
+
+                </button>
+
+            </div>
+
+
+            <div class="buscador">
+
+                <span>
+                    🔍
+                </span>
+
+
+                <input
+                    id="buscarStock"
+                    type="text"
+                    placeholder="Buscar producto..."
+                    oninput="renderStock()">
+
+            </div>
+
+
+            <div
+                id="filtrosCategorias"
+                class="filtros">
+            </div>
+
+
+            <div
+                id="listaStock"
+                class="lista-productos">
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             CATEGORÍAS
+        ================================================== -->
+
+        <section
+            id="pantalla-categorias"
+            class="pantalla-contenido oculto">
+
+
+            <div class="pantalla-titulo">
+
+                <div>
+
+                    <h2>
+                        Categorías
+                    </h2>
+
+                    <p>
+                        Organizá tus productos
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="listaCategorias"
+                class="categorias-grid">
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             VENCIMIENTOS
+        ================================================== -->
+
+        <section
+            id="pantalla-vencimientos"
+            class="pantalla-contenido oculto">
+
+
+            <div class="pantalla-titulo">
+
+                <div>
+
+                    <h2>
+                        Vencimientos
+                    </h2>
+
+                    <p>
+                        Controlá las fechas de tus alimentos
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="filtros-vencimientos">
+
+
+                <button
+                    type="button"
+                    class="filtro-vencimiento activo"
+                    onclick="filtrarVencimientos('proximos', this)">
+
+                    Próximos
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="filtro-vencimiento"
+                    onclick="filtrarVencimientos('hoy', this)">
+
+                    Hoy
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="filtro-vencimiento"
+                    onclick="filtrarVencimientos('vencidos', this)">
+
+                    Vencidos
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="filtro-vencimiento"
+                    onclick="filtrarVencimientos('todos', this)">
+
+                    Todos
+
+                </button>
+
+            </div>
+
+
+            <div
+                id="listaVencimientos"
+                class="lista-productos">
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             LISTA DE COMPRAS
+        ================================================== -->
+
+        <section
+            id="pantalla-lista"
+            class="pantalla-contenido oculto">
+
+
+            <div class="pantalla-titulo">
+
+                <div>
+
+                    <h2>
+                        Lista de compras
+                    </h2>
+
+                    <p>
+                        Productos que necesitás reponer
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="listaCompras"
+                class="lista-compras">
+            </div>
+
+
+            <button
+                type="button"
+                class="btn-principal"
+                onclick="agregarCompraManual()">
+
+                + Agregar a la lista
+
+            </button>
+
+        </section>
+
+
+
+        <!-- =================================================
+             DETALLE
+        ================================================== -->
+
+        <section
+            id="pantalla-detalle"
+            class="pantalla-contenido oculto">
+
+
+            <div class="pantalla-titulo">
+
+                <button
+                    type="button"
+                    class="btn-volver"
+                    onclick="mostrarPantalla('stock')">
+
+                    ← Volver
+
+                </button>
+
+            </div>
+
+
+            <div id="detalleProducto"></div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             FORMULARIO
+        ================================================== -->
+
+        <section
+            id="pantalla-formulario"
+            class="pantalla-contenido oculto">
+
+
+            <div class="pantalla-titulo">
+
+                <button
+                    type="button"
+                    class="btn-volver"
+                    onclick="mostrarPantalla('stock')">
+
+                    ← Volver
+
+                </button>
+
+
+                <h2 id="tituloFormulario">
+                    Nuevo producto
+                </h2>
+
+            </div>
+
+
+            <form
+                id="formProducto"
+                onsubmit="guardarProducto(event)">
+
+
+                <input
+                    type="hidden"
+                    id="productoEditando">
+
+
+                <label for="nombreProducto">
+                    Nombre del producto *
+                </label>
+
+
+                <input
+                    id="nombreProducto"
+                    type="text"
+                    placeholder="Ej: Arroz Gallo"
+                    required>
+
+
+                <label for="categoriaProducto">
+                    Categoría *
+                </label>
+
+
+                <select
+                    id="categoriaProducto"
+                    required
+                    onchange="mostrarCamposElaboracion()">
+
+                    <option value="">
+                        Seleccioná una categoría
+                    </option>
+
+                </select>
+
+
+
+                <div
+                    id="camposElaboracion"
+                    class="oculto">
+
+
+                    <div class="bloque-elaboracion">
+
+
+                        <h3>
+                            🍰 Elaboración propia
+                        </h3>
+
+
+                        <p>
+                            Completá estos datos para controlar
+                            automáticamente el vencimiento.
+                        </p>
+
+
+                        <label for="fechaElaboracion">
+                            Fecha de elaboración
+                        </label>
+
+
+                        <input
+                            id="fechaElaboracion"
+                            type="date">
+
+
+                        <label for="duracionElaboracion">
+                            Duración
+                        </label>
+
+
+                        <div
+                            style="
+                                display:flex;
+                                gap:10px;
+                                align-items:center;
+                            ">
+
+
+                            <input
+                                id="duracionElaboracion"
+                                type="number"
+                                min="1"
+                                placeholder="Ej: 30"
+                                style="flex:1;">
+
+
+                            <span>
+                                días
+                            </span>
+
+                        </div>
+
+
+                        <label for="tipoPresentacion">
+                            Tipo de presentación
+                        </label>
+
+
+                        <select id="tipoPresentacion">
+
+                            <option value="">
+                                Seleccioná una presentación
+                            </option>
+
+                            <option value="Envasado al vacío">
+                                Envasado al vacío
+                            </option>
+
+                            <option value="Frasco de vidrio">
+                                Frasco de vidrio
+                            </option>
+
+                            <option value="Frasco hermético">
+                                Frasco hermético
+                            </option>
+
+                            <option value="Otro">
+                                Otro
+                            </option>
+
+                        </select>
+
+
+                    </div>
+
+                </div>
+
+
+
+                <label for="presentacionProducto">
+                    Presentación
+                </label>
+
+
+                <input
+                    id="presentacionProducto"
+                    type="text"
+                    placeholder="Ej: 1 kg, 500 g, 1 L">
+
+
+                <label for="codigoProducto">
+                    Código de barras
+                </label>
+
+
+                <input
+                    id="codigoProducto"
+                    type="text"
+                    placeholder="Se completa al escanear">
+
+
+                <label>
+                    Cantidad inicial
+                </label>
+
+
+                <div class="contador">
+
+
+                    <button
+                        type="button"
+                        onclick="cambiarCantidadFormulario(-1)">
+
+                        −
+
+                    </button>
+
+
+                    <strong id="cantidadFormulario">
+                        1
+                    </strong>
+
+
+                    <button
+                        type="button"
+                        onclick="cambiarCantidadFormulario(1)">
+
+                        +
+
+                    </button>
+
+                </div>
+
+
+
+                <label>
+                    Stock mínimo
+                </label>
+
+
+                <div class="contador">
+
+
+                    <button
+                        type="button"
+                        onclick="cambiarMinimoFormulario(-1)">
+
+                        −
+
+                    </button>
+
+
+                    <strong id="minimoFormulario">
+                        1
+                    </strong>
+
+
+                    <button
+                        type="button"
+                        onclick="cambiarMinimoFormulario(1)">
+
+                        +
+
+                    </button>
+
+                </div>
+
+
+
+                <label for="vencimientoProducto">
+                    Fecha de vencimiento
+                </label>
+
+
+                <input
+                    id="vencimientoProducto"
+                    type="date">
+
+
+                <button
+                    type="submit"
+                    class="btn-principal">
+
+                    💾 Guardar producto
+
+                </button>
+
+            </form>
+
+        </section>
+
+
+
+        <!-- =================================================
+             NAVBAR
+        ================================================== -->
+
+        <nav class="navbar">
+
+
+            <button
+                type="button"
+                onclick="mostrarPantalla('inicio')">
+
+                <span>
+                    🏠
+                </span>
+
+                <small>
+                    Inicio
+                </small>
+
+            </button>
+
+
+            <button
+                type="button"
+                onclick="mostrarPantalla('stock')">
+
+                <span>
+                    📦
+                </span>
+
+                <small>
+                    Stock
+                </small>
+
+            </button>
+
+
+            <button
+                type="button"
+                class="boton-escanear"
+                onclick="mostrarPantalla('escanear')">
+
+                <span>
+                    📷
+                </span>
+
+                <small>
+                    Escanear producto
+                </small>
+
+            </button>
+
+
+            <button
+                type="button"
+                onclick="mostrarPantalla('vencimientos')">
+
+                <span>
+                    ⏰
+                </span>
+
+                <small>
+                    Vencimientos
+                </small>
+
+            </button>
+
+
+            <button
+                type="button"
+                onclick="mostrarPantalla('lista')">
+
+                <span>
+                    🛒
+                </span>
+
+                <small>
+                    Compras
+                </small>
+
+            </button>
+
+        </nav>
+
+    </main>
+
+</div>
+
+
+
+<!-- =====================================================
+     MODAL
+====================================================== -->
+
+<div
+    id="modal"
+    class="modal oculto">
+
+
+    <div class="modal-contenido">
+
+
+        <button
+            type="button"
+            class="cerrar-modal"
+            onclick="cerrarModal()">
+
+            ×
+
+        </button>
+
+
+        <div id="contenidoModal"></div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     SCRIPT PRINCIPAL
+====================================================== -->
+
+<script
+    type="module"
+    src="script.js">
+</script>
+
+
+</body>
+</html>
