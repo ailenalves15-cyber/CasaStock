@@ -20,16 +20,30 @@
     --texto: #111111;
 }
 
+/* =========================================================
+   BASE
+========================================================= */
+
 html {
     min-height: 100%;
-    background: #292828;
+    background: #0f1113;
 }
 
 body {
     min-height: 100vh;
+    min-height: 100dvh;
+
+    width: 100%;
+    max-width: 100vw;
+
+    overflow-x: hidden;
+
     font-family: Arial, Helvetica, sans-serif;
+
     background: #0f1113;
     color: var(--texto);
+
+    -webkit-tap-highlight-color: transparent;
 }
 
 button,
@@ -40,6 +54,7 @@ select {
 
 button {
     cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
 }
 
 button:disabled {
@@ -47,9 +62,10 @@ button:disabled {
     opacity: 0.6;
 }
 
-/* =========================================================
-   OCULTAR ELEMENTOS
-   ========================================================= */
+img {
+    max-width: 100%;
+    display: block;
+}
 
 .oculto {
     display: none !important;
@@ -57,24 +73,32 @@ button:disabled {
 
 /* =========================================================
    APP GENERAL
-   ========================================================= */
+========================================================= */
 
 #app {
-    min-height: 100vh;
     width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
 }
 
 /* =========================================================
    LOGIN
-   ========================================================= */
+========================================================= */
 
 #pantallaAuth {
-    min-height: 100vh;
     width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 25px 16px;
+
+    padding:
+        max(24px, env(safe-area-inset-top))
+        18px
+        max(24px, env(safe-area-inset-bottom))
+        18px;
 
     background:
         radial-gradient(
@@ -95,16 +119,111 @@ button:disabled {
 }
 
 /* =========================================================
-   FORMULARIOS DE AUTENTICACIÓN
-   ========================================================= */
+   PANTALLA INICIAL
+========================================================= */
+
+.pantalla-inicial {
+    width: 100%;
+    max-width: 500px;
+    min-height: 100vh;
+    min-height: 100dvh;
+
+    margin: 0 auto;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+
+    padding: 24px 18px;
+
+    text-align: center;
+}
+
+/* =========================================================
+   LOGO LOGIN
+========================================================= */
+
+.logo-casa {
+    width: 150px;
+    height: 150px;
+
+    margin: 0 auto 18px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: transparent;
+
+    border: none;
+}
+
+.logo-casa img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+
+    background: transparent;
+}
+
+/*
+ * Por si todavía queda el corazón del HTML viejo.
+ */
+.logo-casa span {
+    display: none;
+}
+
+/* =========================================================
+   TITULO LOGIN
+========================================================= */
+
+.pantalla-inicial h1 {
+    font-size: clamp(32px, 9vw, 42px);
+
+    line-height: 1.1;
+
+    margin-top: -8px;
+    margin-bottom: 4px;
+}
+
+/* CASA = azul */
+.pantalla-inicial h1 .titulo-casa {
+    color: #1976d2;
+}
+
+/* STOCK = celeste del diseño */
+.pantalla-inicial h1 .titulo-stock {
+    color: #4db6e8;
+}
+
+.pantalla-inicial > p {
+    max-width: 330px;
+
+    color: var(--gris);
+
+    font-size: 15px;
+    line-height: 1.5;
+
+    margin-bottom: 28px;
+}
+
+/* =========================================================
+   FORMULARIOS AUTH
+========================================================= */
 
 #pantallaAuth .bloque-auth {
     width: 100%;
     max-width: 360px;
 
     background: transparent !important;
+
     border: none !important;
+
     border-radius: 0 !important;
+
     box-shadow: none !important;
 
     padding: 0;
@@ -112,17 +231,23 @@ button:disabled {
 
 #pantallaAuth .bloque-auth h2 {
     color: var(--verde);
+
     font-size: 22px;
-    margin-bottom: 20px;
+
+    margin-bottom: 18px;
 }
 
 #pantallaAuth .bloque-auth label {
     display: block;
+
     width: 100%;
+
     text-align: left;
 
     font-size: 13px;
+
     font-weight: bold;
+
     color: white;
 
     margin: 12px 0 6px;
@@ -131,29 +256,45 @@ button:disabled {
 #pantallaAuth .bloque-auth input {
     width: 100%;
 
+    min-height: 48px;
+
     border: 1px solid #30363b;
+
     background: #ffffff;
+
     border-radius: 12px;
 
     padding: 13px;
 
     outline: none;
+
     color: var(--texto);
+
+    font-size: 16px;
 }
 
 #pantallaAuth .bloque-auth input:focus {
     border-color: var(--verde);
-    box-shadow: 0 0 0 3px rgba(77, 182, 232, 0.12);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(77, 182, 232, 0.12);
 }
 
 #pantallaAuth .btn-link {
+    width: 100%;
+
     border: none;
+
     background: transparent;
 
     color: var(--gris);
 
-    margin-top: 18px;
-    padding: 5px;
+    margin-top: 16px;
+
+    padding: 8px 4px;
+
+    font-size: 13px;
 }
 
 #pantallaAuth .btn-link strong {
@@ -161,8 +302,8 @@ button:disabled {
 }
 
 /* =========================================================
-   CONTENEDOR LOGIN
-   ========================================================= */
+   CONTENEDOR AUTH
+========================================================= */
 
 .auth-contenedor {
     width: 100%;
@@ -171,99 +312,31 @@ button:disabled {
     background: transparent;
 
     border-radius: 0;
-    padding: 32px 25px;
 
-    box-shadow: none;
-}
-
-/* =========================================================
-   LOGO
-   ========================================================= */
-
-.logo-casa {
-    width: 105px;
-    height: 105px;
-
-    margin: 0 auto 22px;
-
-    border: 5px solid var(--verde);
-    border-radius: 38px;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    font-size: 52px;
-    color: var(--verde);
-
-    position: relative;
-
-    background: var(--blanco);
-}
-
-.logo-casa span {
-    position: absolute;
-
-    font-size: 26px;
-    color: var(--verde);
-
-    right: 16px;
-    bottom: 16px;
-}
-
-/* =========================================================
-   PANTALLA INICIAL
-   ========================================================= */
-
-.pantalla-inicial {
-    min-height: 100vh;
-    width: 100%;
-    max-width: 500px;
-
-    margin: auto;
-
-    background: var(--crema);
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    padding: 30px;
-
-    text-align: center;
-}
-
-.pantalla-inicial h1 {
-    font-size: 42px;
-    color: var(--verde);
-    margin-bottom: 8px;
-}
-
-.pantalla-inicial p {
-    color: var(--gris);
-    font-size: 17px;
-    margin-bottom: 35px;
+    padding: 20px;
 }
 
 /* =========================================================
    APP PRINCIPAL
-   ========================================================= */
+========================================================= */
 
 #appPrincipal {
     display: none;
 
     width: 100%;
     max-width: 500px;
-    min-height: 100vh;
 
-    margin: auto;
+    min-height: 100vh;
+    min-height: 100dvh;
+
+    margin: 0 auto;
 
     background: var(--crema);
 
     position: relative;
 
-    padding-bottom: 100px;
+    padding-bottom:
+        calc(90px + env(safe-area-inset-bottom));
 }
 
 #appPrincipal:not(.oculto) {
@@ -276,25 +349,36 @@ button:disabled {
 
 /* =========================================================
    HEADER
-   ========================================================= */
+========================================================= */
 
 .header {
-    height: 65px;
+    width: 100%;
+
+    min-height: 60px;
 
     display: flex;
+
     align-items: center;
+
     justify-content: space-between;
 
-    padding: 0 18px;
+    gap: 8px;
+
+    padding:
+        10px
+        14px;
 
     background: var(--crema);
 
     position: sticky;
+
     top: 0;
 
     z-index: 20;
 
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom:
+        1px solid
+        rgba(255, 255, 255, 0.08);
 }
 
 .header h2 {
@@ -307,87 +391,42 @@ button:disabled {
     height: 42px;
 
     border: none;
+
     background: transparent;
 
     font-size: 22px;
+
     color: var(--verde);
 
     border-radius: 12px;
 }
 
-.icon-button:hover {
-    background: var(--naranja-claro);
-}
-
 /* =========================================================
-   HEADER NUEVO
-   ========================================================= */
+   BOTON BUSCAR
+========================================================= */
 
-.header-app {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+.header .boton-buscar {
+    min-height: 40px;
 
-    gap: 10px;
-
-    padding: 14px 16px;
-
-    background: var(--crema);
-
-    position: sticky;
-    top: 0;
-
-    z-index: 20;
-
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.header-app .boton-menu {
-    border: none;
-    background: transparent;
-
-    color: var(--verde);
-
-    font-size: 22px;
-
-    padding: 5px;
-
-    flex-shrink: 0;
-}
-
-.header-app .header-logo {
-    color: var(--verde);
-
-    font-size: 17px;
-    font-weight: bold;
-
-    white-space: nowrap;
-
-    flex: 1;
-}
-
-/* =========================================================
-   BOTÓN BUSCAR PRODUCTOS
-   ========================================================= */
-
-.header-app .boton-buscar {
     border: none !important;
 
     background: transparent !important;
 
     box-shadow: none !important;
 
-    color: white;
+    padding: 6px 4px !important;
 
-    padding: 5px !important;
     margin: 0 !important;
 
-    font-size: 14px;
-    font-weight: bold;
+    color: white;
+
+    font-size: 13px;
+
+    font-weight: 700;
 
     display: flex;
+
     align-items: center;
-    justify-content: center;
 
     gap: 4px;
 
@@ -396,59 +435,92 @@ button:disabled {
     border-radius: 0 !important;
 }
 
-.header-app .boton-buscar span {
-    color: white;
+.header .boton-buscar span {
+    font-size: 13px;
 
-    font-size: 14px;
-    font-weight: bold;
+    font-weight: 700;
+
+    color: white;
 }
 
-.header-app .boton-buscar:hover,
-.header-app .boton-buscar:focus,
-.header-app .boton-buscar:active {
+.header .boton-buscar:hover,
+.header .boton-buscar:focus,
+.header .boton-buscar:active {
+    background: transparent !important;
+
+    border: none !important;
+
+    box-shadow: none !important;
+
+    color: var(--verde);
+}
+
+/* =========================================================
+   CERRAR SESION
+========================================================= */
+
+.header .boton-salir {
+    min-height: 40px;
+
     border: none !important;
 
     background: transparent !important;
 
     box-shadow: none !important;
 
-    color: white;
-}
+    padding: 6px 4px !important;
 
-/* =========================================================
-   CERRAR SESIÓN
-   ========================================================= */
-
-.header-app .boton-salir {
-    border: none;
-
-    background: transparent;
+    margin: 0 !important;
 
     color: white;
 
-    padding: 5px;
-    margin: 0;
+    font-size: 13px;
 
-    font-size: 14px;
-    font-weight: bold;
+    font-weight: 700;
 
     white-space: nowrap;
+
+    border-radius: 0 !important;
+}
+
+.header .boton-salir:hover,
+.header .boton-salir:focus,
+.header .boton-salir:active {
+    background: transparent !important;
+
+    border: none !important;
+
+    box-shadow: none !important;
+
+    color: var(--verde);
+}
+
+.header .boton-salir span:first-child {
+    font-size: 18px;
+}
+
+.header .boton-salir span:last-child {
+    font-size: 13px;
+    font-weight: 700;
 }
 
 /* =========================================================
-   PANTALLAS DE LA APP
-   ========================================================= */
+   PANTALLAS
+========================================================= */
 
 .pantalla-contenido {
-    display: block;
-
     width: 100%;
-
-    padding: 18px;
 
     min-height: calc(100vh - 140px);
 
-    padding-bottom: 30px;
+    padding:
+        18px
+        16px
+        30px;
+
+    color: white;
+
+    overflow-x: hidden;
 }
 
 .pantalla-contenido.oculto {
@@ -457,72 +529,103 @@ button:disabled {
 
 /* =========================================================
    INICIO
-   ========================================================= */
+========================================================= */
+
+.bienvenida {
+    margin-bottom: 20px;
+}
 
 .saludo {
     margin-bottom: 22px;
 }
 
+.bienvenida h2,
 .saludo h2 {
-    font-size: 28px;
-    margin-bottom: 5px;
+    font-size: clamp(23px, 7vw, 28px);
+
+    line-height: 1.2;
+
+    margin-bottom: 6px;
+
     color: white;
 }
 
+.bienvenida p,
 .saludo p {
     color: var(--gris);
+
+    font-size: 14px;
+
+    line-height: 1.5;
 }
 
+/* =========================================================
+   RESUMEN
+========================================================= */
+
 .resumen-grid {
+    width: 100%;
+
     display: grid;
 
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
 
-    gap: 12px;
+    gap: 10px;
 
-    margin-bottom: 28px;
+    margin-bottom: 26px;
+
     margin-top: 18px;
 }
 
 .tarjeta-resumen {
+    width: 100%;
+
+    min-width: 0;
+
+    min-height: 110px;
+
     background: var(--blanco);
 
-    border: 1px solid #e5e5e5;
+    border:
+        1px solid
+        #e5e5e5;
 
-    border-radius: 18px;
+    border-radius: 17px;
 
-    padding: 16px;
+    padding: 14px 10px;
 
     display: flex;
+
     flex-direction: column;
 
-    min-height: 120px;
+    justify-content: center;
+
+    align-items: center;
 
     text-align: center;
-    align-items: center;
 }
 
 .tarjeta-resumen .icono-resumen {
-    font-size: 22px;
-    margin-bottom: 8px;
+    font-size: 21px;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
+    margin-bottom: 7px;
 }
 
 .tarjeta-resumen strong {
-    font-size: 25px;
+    font-size: 24px;
+
     color: var(--texto);
-    text-align: center;
+
+    line-height: 1.1;
 }
 
 .tarjeta-resumen span {
     color: #555555;
-    font-size: 12px;
-    margin-top: 3px;
-    text-align: center;
+
+    font-size: 11px;
+
+    margin-top: 4px;
 }
 
 .tarjeta-resumen.alerta strong {
@@ -533,38 +636,39 @@ button:disabled {
     color: var(--rojo);
 }
 
-.seccion {
-    margin-bottom: 28px;
-}
+/* =========================================================
+   TITULOS
+========================================================= */
 
 .titulo-seccion {
     display: flex;
+
     justify-content: space-between;
+
     align-items: center;
+
+    gap: 10px;
 
     margin-bottom: 12px;
 }
 
 .titulo-seccion h3 {
     font-size: 18px;
+
     color: white;
 }
 
-.titulo-seccion button {
-    border: none;
-
-    background: transparent;
-
-    color: var(--verde);
-
-    font-size: 13px;
-    font-weight: bold;
-}
+/* =========================================================
+   ACCIONES RAPIDAS
+========================================================= */
 
 .acciones-rapidas {
+    width: 100%;
+
     display: grid;
 
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
 
     gap: 10px;
 
@@ -572,27 +676,37 @@ button:disabled {
 }
 
 .accion {
+    width: 100%;
+
+    min-width: 0;
+
+    min-height: 125px;
+
     background: white;
 
-    border: 1px solid #e5e5e5;
+    border:
+        1px solid
+        #e5e5e5;
 
-    border-radius: 18px;
+    border-radius: 17px;
 
-    padding: 18px;
-
-    text-align: left;
+    padding: 15px 10px;
 
     display: flex;
+
     flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
 
     gap: 5px;
 
     color: var(--texto);
 
-    min-height: 125px;
-
-    align-items: center;
     text-align: center;
+
+    transition: 0.2s ease;
 }
 
 .accion:hover {
@@ -600,41 +714,47 @@ button:disabled {
 }
 
 .accion span {
-    font-size: 28px;
+    font-size: 27px;
 
-    width: 100%;
     display: flex;
+
     justify-content: center;
+
     align-items: center;
-    text-align: center;
 }
 
 .accion strong {
-    font-size: 15px;
-    text-align: center;
+    font-size: 14px;
+
+    line-height: 1.2;
 }
 
 .accion small {
     color: #6d7774;
-    text-align: center;
+
+    font-size: 11px;
+
+    line-height: 1.3;
 }
 
 /* =========================================================
    BOTONES
-   ========================================================= */
+========================================================= */
 
 .btn-principal {
     width: 100%;
 
+    min-height: 48px;
+
     border: none;
 
-    border-radius: 14px;
+    border-radius: 13px;
 
     background: var(--verde);
 
     color: #071015;
 
-    padding: 15px;
+    padding: 13px 15px;
 
     font-weight: bold;
 
@@ -648,57 +768,61 @@ button:disabled {
 }
 
 .btn-principal.grande {
-    width: 230px;
+    width: 100%;
 }
 
 .btn-secundario {
     width: 100%;
 
-    border: 1px solid var(--verde);
+    min-height: 48px;
 
-    border-radius: 14px;
+    border:
+        1px solid
+        var(--verde);
+
+    border-radius: 13px;
 
     background: white;
 
     color: var(--verde);
 
-    padding: 14px;
+    padding: 13px;
 
     font-weight: bold;
 
     margin-top: 10px;
 }
 
-.btn-secundario:hover {
-    background: var(--naranja-claro);
-}
-
 .btn-pequeno {
+    min-height: 40px;
+
     border: none;
 
     background: var(--verde);
 
     color: #071015;
 
-    padding: 10px 13px;
+    padding: 9px 12px;
 
     border-radius: 10px;
 
-    font-size: 13px;
+    font-size: 12px;
 
     font-weight: bold;
+
+    white-space: nowrap;
 }
 
 /* =========================================================
    ALERTAS
-   ========================================================= */
+========================================================= */
 
 .alerta-item {
     background: white;
 
     border-radius: 15px;
 
-    padding: 14px;
+    padding: 13px;
 
     margin-bottom: 9px;
 
@@ -706,47 +830,61 @@ button:disabled {
 
     align-items: center;
 
-    gap: 12px;
+    gap: 10px;
 
-    border: 1px solid #e5e5e5;
+    border:
+        1px solid
+        #e5e5e5;
 }
 
 .alerta-icono {
-    font-size: 22px;
+    font-size: 21px;
+
     flex-shrink: 0;
 }
 
 .alerta-info {
     flex: 1;
+
     min-width: 0;
 }
 
 .alerta-info strong {
     display: block;
+
     font-size: 14px;
 }
 
 .alerta-info span {
     font-size: 12px;
+
     color: var(--rojo);
 }
 
 /* =========================================================
-   TITULOS
-   ========================================================= */
+   TITULOS DE PANTALLA
+========================================================= */
 
 .pantalla-titulo {
+    width: 100%;
+
     display: flex;
 
     align-items: center;
 
-    gap: 12px;
+    gap: 10px;
 
-    margin-bottom: 22px;
+    margin-bottom: 20px;
+}
+
+.pantalla-titulo > div {
+    min-width: 0;
 }
 
 .pantalla-titulo h2 {
-    font-size: 24px;
+    font-size: clamp(21px, 6vw, 24px);
+
+    line-height: 1.2;
 
     margin-bottom: 4px;
 
@@ -757,43 +895,45 @@ button:disabled {
     color: var(--gris);
 
     font-size: 13px;
+
+    line-height: 1.4;
 }
 
-.volver {
-    width: 40px;
-    height: 40px;
+.volver,
+.btn-volver {
+    min-width: 40px;
+
+    min-height: 40px;
 
     border: none;
 
     background: transparent;
 
-    font-size: 28px;
+    font-size: 25px;
 
     color: var(--verde);
 
     border-radius: 12px;
-}
 
-.volver:hover {
-    background: var(--naranja-claro);
+    flex-shrink: 0;
 }
 
 /* =========================================================
    SCANNER
-   ========================================================= */
+========================================================= */
 
 .lector-codigo {
     width: 100%;
 
-    min-height: 330px;
+    min-height: 280px;
 
     background: #111;
 
-    border-radius: 22px;
+    border-radius: 20px;
 
     overflow: hidden;
 
-    margin-bottom: 15px;
+    margin-bottom: 13px;
 
     position: relative;
 }
@@ -803,11 +943,11 @@ button:disabled {
 
     height: auto !important;
 
-    min-height: 300px;
+    min-height: 260px;
 
     object-fit: cover;
 
-    border-radius: 20px;
+    border-radius: 18px;
 }
 
 #lectorCodigo__dashboard_section_swaplink {
@@ -815,56 +955,83 @@ button:disabled {
 }
 
 .mensaje-scanner {
+    width: 100%;
+
     background: var(--naranja-claro);
 
     color: #267a9f;
 
     border-radius: 12px;
 
-    padding: 13px;
+    padding: 12px;
 
-    font-size: 13px;
+    font-size: 12px;
 
-    margin-bottom: 12px;
+    line-height: 1.4;
+
+    margin-bottom: 10px;
 
     text-align: center;
 }
 
-.separador {
-    display: flex;
+/* =========================================================
+   SELECTOR SCANNER
+========================================================= */
 
-    align-items: center;
+.selector-modo {
+    width: 100%;
 
-    gap: 10px;
+    display: grid;
 
-    margin: 20px 0;
+    grid-template-columns: 1fr 1fr;
 
-    color: var(--gris);
+    gap: 8px;
+
+    margin-bottom: 12px;
 }
 
-.separador::before,
-.separador::after {
-    content: "";
+.selector-modo button {
+    min-height: 44px;
 
-    height: 1px;
+    border:
+        1px solid
+        var(--gris-claro);
 
-    background: var(--gris-claro);
+    border-radius: 12px;
 
-    flex: 1;
+    background: #181c1f;
+
+    color: white;
+
+    font-weight: bold;
+}
+
+.selector-modo button.activo {
+    background: var(--verde);
+
+    color: #071015;
+
+    border-color: var(--verde);
 }
 
 /* =========================================================
    BUSCADOR
-   ========================================================= */
+========================================================= */
 
 .buscador {
+    width: 100%;
+
+    min-height: 48px;
+
     background: white;
 
-    border: 1px solid #e5e5e5;
+    border:
+        1px solid
+        #e5e5e5;
 
-    border-radius: 14px;
+    border-radius: 13px;
 
-    padding: 11px 13px;
+    padding: 10px 12px;
 
     display: flex;
 
@@ -872,7 +1039,7 @@ button:disabled {
 
     gap: 8px;
 
-    margin-bottom: 12px;
+    margin-bottom: 11px;
 }
 
 .buscador input {
@@ -883,6 +1050,10 @@ button:disabled {
     background: transparent;
 
     width: 100%;
+
+    min-width: 0;
+
+    font-size: 16px;
 }
 
 .buscador input::placeholder {
@@ -891,20 +1062,24 @@ button:disabled {
 
 /* =========================================================
    FILTROS
-   ========================================================= */
+========================================================= */
 
 .filtros {
+    width: 100%;
+
     display: flex;
 
     gap: 7px;
 
     overflow-x: auto;
 
-    padding-bottom: 10px;
+    padding-bottom: 9px;
 
     margin-bottom: 8px;
 
     scrollbar-width: none;
+
+    -webkit-overflow-scrolling: touch;
 }
 
 .filtros::-webkit-scrollbar {
@@ -912,19 +1087,21 @@ button:disabled {
 }
 
 .filtro {
-    border: 1px solid #d6dadd;
+    border:
+        1px solid
+        #d6dadd;
 
     background: white;
 
     border-radius: 20px;
 
-    padding: 8px 13px;
+    padding: 8px 12px;
 
     white-space: nowrap;
 
     font-size: 12px;
 
-    color: var(--gris);
+    color: #555;
 
     flex-shrink: 0;
 }
@@ -939,9 +1116,11 @@ button:disabled {
 
 /* =========================================================
    PRODUCTOS
-   ========================================================= */
+========================================================= */
 
 .lista-productos {
+    width: 100%;
+
     display: flex;
 
     flex-direction: column;
@@ -950,32 +1129,32 @@ button:disabled {
 }
 
 .producto-item {
+    width: 100%;
+
+    min-width: 0;
+
     background: white;
 
-    border: 1px solid #e5e5e5;
+    border:
+        1px solid
+        #e5e5e5;
 
-    border-radius: 16px;
+    border-radius: 15px;
 
-    padding: 13px;
+    padding: 12px;
 
     display: flex;
 
     align-items: center;
 
-    gap: 12px;
-
-    transition: 0.2s ease;
-}
-
-.producto-item:hover {
-    border-color: #b9e3f5;
+    gap: 10px;
 }
 
 .producto-icono {
-    width: 46px;
-    height: 46px;
+    width: 44px;
+    height: 44px;
 
-    border-radius: 13px;
+    border-radius: 12px;
 
     background: var(--naranja-claro);
 
@@ -985,7 +1164,7 @@ button:disabled {
 
     align-items: center;
 
-    font-size: 24px;
+    font-size: 23px;
 
     flex-shrink: 0;
 }
@@ -1014,18 +1193,22 @@ button:disabled {
     display: block;
 
     margin-top: 3px;
+
+    font-size: 11px;
 }
 
 .estado {
     border-radius: 20px;
 
-    padding: 5px 8px;
+    padding: 5px 7px;
 
-    font-size: 10px;
+    font-size: 9px;
 
     font-weight: bold;
 
     white-space: nowrap;
+
+    flex-shrink: 0;
 }
 
 .estado.ok {
@@ -1050,48 +1233,53 @@ button:disabled {
     color: #aaa;
 
     font-size: 18px;
+
+    flex-shrink: 0;
 }
 
 /* =========================================================
    CATEGORIAS
-   ========================================================= */
+========================================================= */
 
 .categorias-grid {
+    width: 100%;
+
     display: grid;
 
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
 
-    gap: 12px;
+    gap: 10px;
 }
 
 .categoria-card {
+    width: 100%;
+
+    min-width: 0;
+
     background: white;
 
-    border: 1px solid #e5e5e5;
+    border:
+        1px solid
+        #e5e5e5;
 
-    border-radius: 18px;
+    border-radius: 16px;
 
-    padding: 20px 15px;
+    padding: 18px 10px;
 
     text-align: center;
-
-    transition: 0.2s ease;
-}
-
-.categoria-card:hover {
-    border-color: var(--naranja);
 }
 
 .categoria-card .categoria-icono {
-    font-size: 30px;
+    font-size: 28px;
 
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 
 .categoria-card strong {
     display: block;
 
-    font-size: 14px;
+    font-size: 13px;
 }
 
 .categoria-card small {
@@ -1100,18 +1288,22 @@ button:disabled {
     display: block;
 
     margin-top: 4px;
+
+    font-size: 11px;
 }
 
 /* =========================================================
    FORMULARIO
-   ========================================================= */
+========================================================= */
 
 #formProducto {
+    width: 100%;
+
     display: flex;
 
     flex-direction: column;
 
-    gap: 9px;
+    gap: 8px;
 }
 
 #formProducto label {
@@ -1128,24 +1320,32 @@ button:disabled {
 #formProducto select {
     width: 100%;
 
-    border: 1px solid #d6dadd;
+    min-height: 48px;
+
+    border:
+        1px solid
+        #d6dadd;
 
     background: white;
 
     border-radius: 12px;
 
-    padding: 13px;
+    padding: 12px;
 
     outline: none;
 
     color: var(--texto);
+
+    font-size: 16px;
 }
 
 #formProducto input:focus,
 #formProducto select:focus {
     border-color: var(--verde);
 
-    box-shadow: 0 0 0 3px rgba(77, 182, 232, 0.12);
+    box-shadow:
+        0 0 0 3px
+        rgba(77, 182, 232, 0.12);
 }
 
 #camposElaboracion {
@@ -1153,9 +1353,9 @@ button:disabled {
 
     background: var(--naranja-claro);
 
-    border-radius: 16px;
+    border-radius: 15px;
 
-    padding: 14px;
+    padding: 13px;
 
     margin-top: 4px;
 }
@@ -1166,12 +1366,16 @@ button:disabled {
 
 /* =========================================================
    CONTADOR
-   ========================================================= */
+========================================================= */
 
 .contador {
+    width: 100%;
+
     background: white;
 
-    border: 1px solid #d6dadd;
+    border:
+        1px solid
+        #d6dadd;
 
     border-radius: 13px;
 
@@ -1198,6 +1402,8 @@ button:disabled {
     font-size: 24px;
 
     color: var(--verde);
+
+    flex-shrink: 0;
 }
 
 .contador strong {
@@ -1206,16 +1412,20 @@ button:disabled {
 
 /* =========================================================
    DETALLE
-   ========================================================= */
+========================================================= */
 
 .detalle-card {
+    width: 100%;
+
     background: white;
 
-    border-radius: 20px;
+    border-radius: 18px;
 
-    padding: 18px;
+    padding: 16px;
 
-    border: 1px solid #e5e5e5;
+    border:
+        1px solid
+        #e5e5e5;
 }
 
 .detalle-header {
@@ -1223,18 +1433,18 @@ button:disabled {
 
     align-items: center;
 
-    gap: 15px;
+    gap: 12px;
 
-    margin-bottom: 20px;
+    margin-bottom: 18px;
 }
 
 .detalle-icono {
-    width: 75px;
-    height: 75px;
+    width: 65px;
+    height: 65px;
 
     background: var(--naranja-claro);
 
-    border-radius: 18px;
+    border-radius: 16px;
 
     display: flex;
 
@@ -1242,47 +1452,53 @@ button:disabled {
 
     justify-content: center;
 
-    font-size: 40px;
+    font-size: 34px;
 
     flex-shrink: 0;
 }
 
 .detalle-header h2 {
-    font-size: 20px;
+    font-size: 19px;
 
     color: var(--verde);
+
+    word-break: break-word;
 }
 
 .detalle-header p {
     color: var(--gris);
 
-    font-size: 13px;
+    font-size: 12px;
 
     margin-top: 4px;
 }
 
 .dato-detalle {
-    border-top: 1px solid #eee;
+    border-top:
+        1px solid
+        #eee;
 
-    padding: 13px 0;
+    padding: 12px 0;
 
     display: flex;
 
     justify-content: space-between;
 
-    gap: 20px;
+    gap: 15px;
 }
 
 .dato-detalle span {
     color: var(--gris);
 
-    font-size: 13px;
+    font-size: 12px;
 }
 
 .dato-detalle strong {
     text-align: right;
 
-    font-size: 13px;
+    font-size: 12px;
+
+    word-break: break-word;
 }
 
 .stock-grande {
@@ -1292,17 +1508,19 @@ button:disabled {
 
     justify-content: space-between;
 
+    gap: 10px;
+
     background: #edf8fd;
 
-    border-radius: 15px;
+    border-radius: 14px;
 
-    padding: 15px;
+    padding: 14px;
 
-    margin: 15px 0;
+    margin: 14px 0;
 }
 
 .stock-numero {
-    font-size: 28px;
+    font-size: 26px;
 
     color: var(--verde);
 
@@ -1312,7 +1530,7 @@ button:disabled {
 .controles-stock {
     display: flex;
 
-    gap: 7px;
+    gap: 6px;
 }
 
 .controles-stock button {
@@ -1331,25 +1549,29 @@ button:disabled {
 }
 
 /* =========================================================
-   LISTA DE COMPRAS
-   ========================================================= */
+   LISTA COMPRAS
+========================================================= */
 
 .item-compra {
+    width: 100%;
+
     background: white;
 
-    border: 1px solid #e5e5e5;
+    border:
+        1px solid
+        #e5e5e5;
 
-    border-radius: 15px;
+    border-radius: 14px;
 
-    padding: 14px;
+    padding: 13px;
 
     display: flex;
 
     align-items: center;
 
-    gap: 12px;
+    gap: 10px;
 
-    margin-bottom: 9px;
+    margin-bottom: 8px;
 }
 
 .item-compra input[type="checkbox"] {
@@ -1371,6 +1593,8 @@ button:disabled {
     display: block;
 
     font-size: 14px;
+
+    word-break: break-word;
 }
 
 .item-compra-info small {
@@ -1388,34 +1612,42 @@ button:disabled {
 }
 
 /* =========================================================
-   BARRA INFERIOR FIJA
-   ========================================================= */
+   BARRA INFERIOR
+========================================================= */
 
 .navbar {
     position: fixed;
 
     left: 0;
     right: 0;
+
     bottom: 0;
 
     width: 100%;
     max-width: 500px;
 
-    height: 75px;
+    min-height: 68px;
 
     margin: 0 auto;
 
-    background: rgba(15, 17, 19, 0.97);
+    background:
+        rgba(15, 17, 19, 0.97);
 
-    border-top: 1px solid #30363b;
+    border-top:
+        1px solid
+        #30363b;
 
     display: grid;
 
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns:
+        repeat(5, minmax(0, 1fr));
 
     z-index: 1000;
 
-    padding-bottom: env(safe-area-inset-bottom);
+    padding:
+        5px
+        0
+        env(safe-area-inset-bottom);
 
     backdrop-filter: blur(8px);
 
@@ -1423,6 +1655,8 @@ button:disabled {
 }
 
 .navbar button {
+    min-width: 0;
+
     border: none;
 
     background: transparent;
@@ -1437,9 +1671,11 @@ button:disabled {
 
     align-items: center;
 
-    gap: 3px;
+    gap: 2px;
 
     position: relative;
+
+    padding: 4px 2px;
 }
 
 .navbar button:hover {
@@ -1447,93 +1683,34 @@ button:disabled {
 }
 
 .navbar button span {
-    font-size: 21px;
+    font-size: 20px;
+
+    line-height: 1;
 }
 
 .navbar button small {
-    font-size: 10px;
+    font-size: 9px;
+
+    line-height: 1.1;
+
+    white-space: nowrap;
 }
 
 .navbar button.activo {
     color: var(--verde);
 }
 
-.navbar .boton-escanear span {
-    width: 48px;
-    height: 48px;
-
-    border-radius: 50%;
-
-    background: var(--verde);
-
-    color: white;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    margin-top: -25px;
-    margin-bottom: 0;
-
-    border: 5px solid var(--crema);
-
-    font-size: 22px;
-    line-height: 1;
-
-    padding: 0;
-
-    box-sizing: border-box;
-
-    text-align: center;
-}
-
-/* Centrar el ícono de cámara dentro del círculo */
-.navbar .boton-escanear span::before {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    width: 100%;
-    height: 100%;
-
-    line-height: 1;
-}
-
-.navbar .boton-escanear span {
-    width: auto;
-    height: auto;
-
-    border-radius: 0;
-
-    background: transparent;
-
-    color: var(--verde);
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    margin-top: 0;
-    margin-bottom: 0;
-
-    border: none;
-
-    font-size: 22px;
-    line-height: 1;
-
-    padding: 0;
-}
-
 /* =========================================================
    MODAL
-   ========================================================= */
+========================================================= */
 
 .modal {
     position: fixed;
 
     inset: 0;
 
-    background: rgba(0, 0, 0, 0.75);
+    background:
+        rgba(0, 0, 0, 0.75);
 
     z-index: 500;
 
@@ -1549,16 +1726,21 @@ button:disabled {
 }
 
 .modal-contenido {
-    background: var(--crema);
-
     width: 100%;
     max-width: 500px;
 
-    border-radius: 25px 25px 0 0;
+    background: var(--crema);
 
-    padding: 25px;
+    border-radius:
+        22px
+        22px
+        0
+        0;
+
+    padding: 22px;
 
     max-height: 85vh;
+    max-height: 85dvh;
 
     overflow-y: auto;
 
@@ -1568,8 +1750,8 @@ button:disabled {
 .cerrar-modal {
     position: absolute;
 
-    right: 18px;
-    top: 15px;
+    right: 15px;
+    top: 12px;
 
     border: none;
 
@@ -1584,8 +1766,8 @@ button:disabled {
 }
 
 /* =========================================================
-   VACÍOS
-   ========================================================= */
+   VACIOS
+========================================================= */
 
 .vacio {
     text-align: center;
@@ -1605,123 +1787,192 @@ button:disabled {
 
 /* =========================================================
    TOAST
-   ========================================================= */
+========================================================= */
 
 .toast {
     position: fixed;
 
-    bottom: 95px;
+    bottom:
+        calc(
+            85px +
+            env(safe-area-inset-bottom)
+        );
 
     left: 50%;
 
-    transform: translateX(-50%);
+    transform:
+        translateX(-50%);
 
     background: var(--verde);
 
     color: #071015;
 
-    padding: 12px 18px;
+    padding: 11px 16px;
 
     border-radius: 12px;
 
-    font-size: 13px;
+    font-size: 12px;
 
     z-index: 999;
 
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.35);
-
-    animation: aparecer 0.25s ease;
-
-    max-width: calc(100vw - 30px);
+    max-width:
+        calc(100vw - 30px);
 
     text-align: center;
 }
 
-@keyframes aparecer {
-    from {
-        opacity: 0;
-
-        transform: translate(-50%, 10px);
-    }
-
-    to {
-        opacity: 1;
-
-        transform: translate(-50%, 0);
-    }
-}
-
 /* =========================================================
-   CELULAR CHICO
-   ========================================================= */
+   PANTALLAS MUY CHICAS
+========================================================= */
 
 @media (max-width: 380px) {
 
+    .pantalla-inicial {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+.logo-casa {
+    width: 150px;
+    height: 150px;
+
+    margin: 0 auto -8px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: transparent;
+
+    border: none;
+}
+
+    .pantalla-inicial h1 {
+        font-size: 32px;
+    }
+
+    .pantalla-inicial > p {
+        font-size: 14px;
+
+        margin-bottom: 22px;
+    }
+
+    #pantallaAuth .bloque-auth h2 {
+        font-size: 20px;
+    }
+
+    .header {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .header .boton-buscar span,
+    .header .boton-salir span:last-child {
+        font-size: 12px;
+    }
+
     .pantalla-contenido {
-        padding: 15px;
-
-        padding-bottom: 30px;
-    }
-
-    .saludo h2 {
-        font-size: 24px;
-    }
-
-    .acciones-grid {
-        gap: 8px;
-    }
-
-    .accion {
-        padding: 14px;
-    }
-
-    .resumen-grid {
-        gap: 8px;
+        padding-left: 13px;
+        padding-right: 13px;
     }
 
     .tarjeta-resumen {
-        padding: 13px;
+        min-height: 100px;
+
+        padding: 12px 7px;
+    }
+
+    .tarjeta-resumen strong {
+        font-size: 22px;
+    }
+
+    .accion {
+        min-height: 115px;
+
+        padding: 13px 7px;
+    }
+
+    .accion strong {
+        font-size: 13px;
+    }
+
+    .accion small {
+        font-size: 10px;
     }
 
     .lector-codigo {
-        min-height: 280px;
+        min-height: 250px;
     }
 
-   .navbar button span {
-    font-size: 23px;
-}
-
-.navbar button small {
-    font-size: 11px;
-}
-
-    .header-app {
-        padding-left: 12px;
-        padding-right: 12px;
-        gap: 6px;
+    #lectorCodigo video {
+        min-height: 230px;
     }
 
-    .header-app .header-logo {
-        font-size: 15px;
+    .navbar button span {
+        font-size: 19px;
     }
 
-    .header-app .boton-buscar {
-        font-size: 13px;
-        gap: 2px;
-    }
-
-    .header-app .boton-buscar span {
-        font-size: 13px;
-    }
-
-    .header-app .boton-salir {
-        font-size: 13px;
+    .navbar button small {
+        font-size: 8px;
     }
 }
 
 /* =========================================================
-   COMPUTADORA
-   ========================================================= */
+   CELULARES ALTOS / PANTALLAS MODERNAS
+========================================================= */
+
+@media (max-width: 699px) {
+
+    body {
+        width: 100%;
+        max-width: 100vw;
+
+        overflow-x: hidden;
+    }
+
+    #appPrincipal {
+        width: 100%;
+        max-width: 100%;
+
+        border-radius: 0;
+    }
+
+    #pantallaAuth {
+        width: 100%;
+        max-width: 100%;
+
+        border-radius: 0;
+    }
+
+    .navbar {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    /*
+     * Evita que los inputs hagan zoom automático
+     * en iPhone.
+     */
+
+    input,
+    select,
+    textarea {
+        font-size: 16px;
+    }
+
+    /*
+     * Todos los botones tienen una zona cómoda
+     * para tocar con el dedo.
+     */
+
+    button {
+        touch-action: manipulation;
+    }
+}
+
+/* =========================================================
+   TABLETS Y COMPUTADORA
+========================================================= */
 
 @media (min-width: 700px) {
 
@@ -1730,25 +1981,32 @@ button:disabled {
     }
 
     #appPrincipal {
-        min-height: calc(100vh - 40px);
+        min-height:
+            calc(100vh - 40px);
 
         border-radius: 24px;
 
         overflow: visible;
 
-        box-shadow: 0 0 40px rgba(0, 0, 0, 0.35);
+        box-shadow:
+            0 0 40px
+            rgba(0, 0, 0, 0.35);
     }
 
     #pantallaAuth {
-        min-height: calc(100vh - 40px);
+        min-height:
+            calc(100vh - 40px);
     }
 
     .pantalla-inicial {
-        min-height: calc(100vh - 40px);
+        min-height:
+            calc(100vh - 40px);
 
         border-radius: 24px;
 
-        box-shadow: 0 0 40px rgba(0, 0, 0, 0.35);
+        box-shadow:
+            0 0 40px
+            rgba(0, 0, 0, 0.35);
     }
 
     .navbar {
@@ -1758,103 +2016,16 @@ button:disabled {
         right: auto;
         bottom: 0;
 
-        transform: translateX(-50%);
+        transform:
+            translateX(-50%);
 
         border-radius: 0;
     }
 }
 
 /* =========================================================
-   ACCIONES DEL HEADER
-   ========================================================= */
-
-.acciones-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* Buscar productos */
-
-.header .boton-buscar {
-    border: none !important;
-    background: transparent !important;
-    box-shadow: none !important;
-
-    padding: 5px 7px !important;
-    margin: 0 !important;
-
-    color: white;
-
-    font-size: 15px;
-    font-weight: 700;
-
-    display: flex;
-    align-items: center;
-
-    gap: 4px;
-
-    white-space: nowrap;
-
-    border-radius: 0 !important;
-}
-
-.header .boton-buscar span {
-    font-size: 15px;
-    font-weight: 700;
-    color: white;
-}
-
-.header .boton-buscar:hover,
-.header .boton-buscar:focus,
-.header .boton-buscar:active {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    color: var(--verde);
-}
-
-/* Cerrar sesión */
-
-.header .boton-salir {
-    border: none !important;
-    background: transparent !important;
-    box-shadow: none !important;
-
-    padding: 5px 7px !important;
-    margin: 0 !important;
-
-    color: white;
-
-    font-size: 15px;
-    font-weight: 700;
-
-    white-space: nowrap;
-
-    border-radius: 0 !important;
-}
-
-.header .boton-salir:hover,
-.header .boton-salir:focus,
-.header .boton-salir:active {
-    background: transparent !important;
-    border: none !important;
-    box-shadow: none !important;
-    color: var(--verde);
-}
-
-.header .boton-salir span:first-child {
-    font-size: 19px;
-}
-
-.header .boton-salir span:last-child {
-    font-size: 15px;
-    font-weight: 700;
-}
-
-/* =========================================================
-   TEXTOS SOBRE FONDO NEGRO
-   ========================================================= */
+   TEXTOS APP
+========================================================= */
 
 #appPrincipal {
     color: white;
@@ -1888,13 +2059,13 @@ button:disabled {
     color: var(--gris);
 }
 
-/* Textos de formularios sobre fondo negro */
-
 #formProducto label {
     color: white;
 }
 
-/* Los textos dentro de tarjetas blancas siguen siendo negros */
+/* =========================================================
+   TARJETAS BLANCAS
+========================================================= */
 
 .tarjeta-resumen,
 .accion,
@@ -1914,4 +2085,57 @@ button:disabled {
 .detalle-header h2,
 .item-compra-info strong {
     color: var(--texto);
+}
+
+/* =========================================================
+   SEGURIDAD PARA ELEMENTOS ANCHOS
+========================================================= */
+
+#appPrincipal *,
+#pantallaAuth * {
+    max-width: 100%;
+}
+
+#appPrincipal img,
+#pantallaAuth img {
+    object-fit: contain;
+}
+
+/* =========================================================
+   ORIENTACION HORIZONTAL EN CELULAR
+========================================================= */
+
+@media (
+    max-width: 699px
+) and (
+    orientation: landscape
+) {
+
+    .pantalla-inicial {
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+
+    .logo-casa {
+        width: 90px;
+        height: 90px;
+
+        margin-bottom: 8px;
+    }
+
+    .pantalla-inicial h1 {
+        font-size: 28px;
+    }
+
+    .pantalla-inicial > p {
+        margin-bottom: 12px;
+    }
+
+    #pantallaAuth .bloque-auth label {
+        margin-top: 7px;
+    }
+
+    #pantallaAuth .bloque-auth input {
+        min-height: 42px;
+    }
 }
