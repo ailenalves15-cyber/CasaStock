@@ -3151,11 +3151,9 @@ async function iniciarScanner() {
 
             configuracion,
 
-            async (codigo) => {
+            (codigo) => {
 
-                await manejarLecturaScanner(
-                    codigo
-                );
+                manejarLecturaScanner(codigo);
             },
 
             () => {}
@@ -3254,25 +3252,6 @@ async function manejarLecturaScanner(
         return;
     }
 
-    const ahora =
-        Date.now();
-
-    if (
-        codigo ===
-            ultimoCodigoEscaneado &&
-        ahora -
-            ultimoMomentoEscaneado <
-            2500
-    ) {
-        return;
-    }
-
-    ultimoCodigoEscaneado =
-        codigo;
-
-    ultimoMomentoEscaneado =
-        ahora;
-
     if (procesandoCodigo) {
         return;
     }
@@ -3281,22 +3260,21 @@ async function manejarLecturaScanner(
 
     try {
 
-        // Avisar que se detectó el código
+        // Mostrar claramente que se detectó
         mostrarMensajeScanner(
-            `✅ Código detectado: ${codigo}`
+            `✅ ¡CÓDIGO ESCANEADO! ${codigo}`
         );
 
-        // CERRAR LA CÁMARA INMEDIATAMENTE
+        // Detener cámara inmediatamente
         await detenerScanner();
 
-        // Esperar un momento para que se cierre
-        // correctamente la cámara
+        // Dar tiempo a que la cámara se cierre
         await new Promise(
             (resolve) =>
                 setTimeout(resolve, 300)
         );
 
-        // Procesar el producto
+        // Procesar producto
         await procesarCodigoEscaneado(
             codigo
         );
@@ -3309,20 +3287,12 @@ async function manejarLecturaScanner(
         );
 
         mostrarMensajeScanner(
-            "Ocurrió un error al procesar el código."
+            "❌ Ocurrió un error al procesar el código."
         );
 
     } finally {
 
-        setTimeout(
-            () => {
-
-                procesandoCodigo =
-                    false;
-
-            },
-            1200
-        );
+        procesandoCodigo = false;
     }
 }
 
@@ -3778,11 +3748,16 @@ function mostrarMensajeScanner(
             "mensajeScanner"
         );
 
-    if (mensaje) {
-
-        mensaje.textContent =
-            texto;
+    if (!mensaje) {
+        return;
     }
+
+    mensaje.textContent =
+        texto;
+
+    mensaje.classList.remove(
+        "oculto"
+    );
 }
 
 // ======================================================
