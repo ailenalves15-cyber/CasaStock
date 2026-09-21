@@ -3588,18 +3588,16 @@ async function buscarProductoOpenFoodFacts(
                 new Date().toISOString()
         };
 
-        await guardarProductoFirebase(
-            producto
-        );
-
+        // Agregamos temporalmente el producto
+        // a la lista para poder editarlo
         productos.push(
             producto
         );
 
-        renderizarTodo();
-
-        mostrarMensajeScanner(
-            `✅ Producto agregado: ${producto.nombre}`
+        // Abrimos el formulario para completar
+        // cantidad, vencimiento, mínimo, etc.
+        abrirFormularioProducto(
+            producto
         );
 
     } catch (error) {
