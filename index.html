@@ -1240,6 +1240,23 @@
     src="script.js">
 </script>
 
+    <script>
+    if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+            navigator.serviceWorker.register("./service-worker.js")
+                .then(() => {
+                    console.log("CasaStock: aplicación lista");
+                })
+                .catch((error) => {
+                    console.error(
+                        "CasaStock: error al registrar la aplicación",
+                        error
+                    );
+                });
+        });
+    }
+</script>
+
 
 </body>
 </html>
