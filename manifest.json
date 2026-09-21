@@ -1,0 +1,10 @@
+{
+  "name": "CasaStock",
+  "short_name": "CasaStock",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#181a1a",
+  "theme_color": "#123f38",
+  "orientation": "portrait",
+  "lang": "es"
+}
