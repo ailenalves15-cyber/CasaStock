@@ -169,11 +169,37 @@ img {
     background: transparent;
 }
 
-/*
- * Por si todavía queda el corazón del HTML viejo.
- */
 .logo-casa span {
     display: none;
+}
+
+/* =========================================================
+   LOGO HEADER
+========================================================= */
+
+.logo-header {
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin: 0;
+    padding: 0;
+
+    flex-shrink: 0;
+}
+
+.logo-header img {
+    height: 40px;
+    width: auto;
+
+    display: block;
+
+    object-fit: contain;
+
+    margin: 0;
+    padding: 0;
 }
 
 /* =========================================================
@@ -189,12 +215,10 @@ img {
     margin-bottom: 4px;
 }
 
-/* CASA = azul */
 .pantalla-inicial h1 .titulo-casa {
     color: #1976d2;
 }
 
-/* STOCK = celeste del diseño */
 .pantalla-inicial h1 .titulo-stock {
     color: #4db6e8;
 }
@@ -381,10 +405,64 @@ img {
         rgba(255, 255, 255, 0.08);
 }
 
+/*
+ * Todos los elementos del header quedan
+ * centrados verticalmente.
+ */
+
+.header > * {
+    align-self: center;
+}
+
+/* =========================================================
+   LOGO DEL HEADER
+========================================================= */
+
+.header .logo-header {
+    height: 40px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    margin: 0;
+    padding: 0;
+}
+
+.header .logo-header img {
+    display: block;
+
+    width: auto;
+    height: 40px;
+
+    max-height: 40px;
+
+    object-fit: contain;
+
+    margin: 0;
+    padding: 0;
+}
+
+/* =========================================================
+   TITULO HEADER
+========================================================= */
+
 .header h2 {
     font-size: 18px;
+
     color: var(--verde);
+
+    line-height: 1;
+
+    margin: 0;
 }
+
+/* =========================================================
+   ICON BUTTON
+========================================================= */
 
 .icon-button {
     width: 42px;
@@ -399,6 +477,14 @@ img {
     color: var(--verde);
 
     border-radius: 12px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin: 0;
+    padding: 0;
 }
 
 /* =========================================================
@@ -407,6 +493,7 @@ img {
 
 .header .boton-buscar {
     min-height: 40px;
+    height: 40px;
 
     border: none !important;
 
@@ -428,19 +515,33 @@ img {
 
     align-items: center;
 
+    justify-content: center;
+
     gap: 4px;
 
     white-space: nowrap;
 
     border-radius: 0 !important;
+
+    line-height: 1;
 }
 
 .header .boton-buscar span {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
     font-size: 13px;
 
     font-weight: 700;
 
     color: white;
+
+    line-height: 1;
+
+    margin: 0;
 }
 
 .header .boton-buscar:hover,
@@ -461,6 +562,7 @@ img {
 
 .header .boton-salir {
     min-height: 40px;
+    height: 40px;
 
     border: none !important;
 
@@ -481,6 +583,40 @@ img {
     white-space: nowrap;
 
     border-radius: 0 !important;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 5px;
+
+    line-height: 1;
+}
+
+.header .boton-salir span {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    margin: 0;
+
+    padding: 0;
+
+    line-height: 1;
+}
+
+.header .boton-salir span:last-child {
+    font-size: 13px;
+
+    font-weight: 700;
+
+    color: white;
+
+    line-height: 1;
 }
 
 .header .boton-salir:hover,
@@ -495,13 +631,67 @@ img {
     color: var(--verde);
 }
 
-.header .boton-salir span:first-child {
-    font-size: 18px;
+/* =========================================================
+   ICONO CERRAR SESION
+========================================================= */
+
+.header .boton-salir .icono-salir {
+    position: relative;
+
+    width: 18px;
+    height: 18px;
+
+    display: inline-block;
+
+    flex-shrink: 0;
+
+    border: 2px solid currentColor;
+
+    border-radius: 50%;
+
+    line-height: 1;
+
+    vertical-align: middle;
 }
 
-.header .boton-salir span:last-child {
-    font-size: 13px;
-    font-weight: 700;
+.header .boton-salir .icono-salir::before {
+    content: "";
+
+    position: absolute;
+
+    top: -3px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    width: 6px;
+    height: 9px;
+
+    background: currentColor;
+
+    border-radius:
+        0
+        0
+        4px
+        4px;
+}
+
+.header .boton-salir .icono-salir::after {
+    content: "";
+
+    position: absolute;
+
+    top: -2px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    width: 2px;
+    height: 9px;
+
+    background: currentColor;
+
+    border-radius: 2px;
 }
 
 /* =========================================================
@@ -1832,20 +2022,20 @@ img {
         padding-right: 14px;
     }
 
-.logo-casa {
-    width: 150px;
-    height: 150px;
+    .logo-casa {
+        width: 150px;
+        height: 150px;
 
-    margin: 0 auto -8px;
+        margin: 0 auto -8px;
 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
 
-    background: transparent;
+        background: transparent;
 
-    border: none;
-}
+        border: none;
+    }
 
     .pantalla-inicial h1 {
         font-size: 32px;
@@ -1862,13 +2052,37 @@ img {
     }
 
     .header {
-        padding-left: 10px;
-        padding-right: 10px;
+        padding-left: 8px;
+        padding-right: 8px;
+
+        gap: 5px;
+    }
+
+    .header .logo-header {
+        height: 36px;
+    }
+
+    .header .logo-header img {
+        height: 36px;
+        max-height: 36px;
+    }
+
+    .header .boton-buscar,
+    .header .boton-salir {
+        height: 36px;
+        min-height: 36px;
+
+        padding: 4px 2px !important;
     }
 
     .header .boton-buscar span,
     .header .boton-salir span:last-child {
         font-size: 12px;
+    }
+
+    .header .boton-salir .icono-salir {
+        width: 17px;
+        height: 17px;
     }
 
     .pantalla-contenido {
@@ -1949,21 +2163,11 @@ img {
         max-width: 100%;
     }
 
-    /*
-     * Evita que los inputs hagan zoom automático
-     * en iPhone.
-     */
-
     input,
     select,
     textarea {
         font-size: 16px;
     }
-
-    /*
-     * Todos los botones tienen una zona cómoda
-     * para tocar con el dedo.
-     */
 
     button {
         touch-action: manipulation;
@@ -2139,37 +2343,3 @@ img {
         min-height: 42px;
     }
 }
-
-.icono-salir {
-    position: relative;
-    width: 18px;
-    height: 18px;
-    display: inline-block;
-    border: 2px solid currentColor;
-    border-radius: 50%;
-}
-
-.icono-salir::before {
-    content: "";
-    position: absolute;
-    top: -3px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 6px;
-    height: 9px;
-    background: currentColor;
-    border-radius: 0 0 4px 4px;
-}
-
-.icono-salir::after {
-    content: "";
-    position: absolute;
-    top: -2px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 2px;
-    height: 9px;
-    background: currentColor;
-    border-radius: 2px;
-}
-
