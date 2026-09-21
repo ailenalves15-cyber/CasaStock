@@ -3435,6 +3435,11 @@ async function procesarCodigoEscaneado(
         return;
     }
 
+    console.log(
+        "🔴 PROCESANDO CÓDIGO:",
+        codigo
+    );
+
     const producto =
         productos.find(
             (item) =>
@@ -3445,19 +3450,32 @@ async function procesarCodigoEscaneado(
 
     if (producto) {
 
-        // Cerrar el escáner
+        console.log(
+            "🟢 PRODUCTO ENCONTRADO:",
+            producto.nombre
+        );
+
+        mostrarMensajeScanner(
+            `✅ Producto detectado: ${producto.nombre}`
+        );
+
         await detenerScanner();
 
-        // Abrir el formulario con los datos
-        // del producto escaneado
-        abrirFormularioProducto(producto);
+        await new Promise(
+            (resolve) =>
+                setTimeout(resolve, 500)
+        );
+
+        abrirFormularioProducto(
+            producto
+        );
 
         return;
     }
 
-    /*
-     * Si no existe, consultamos Open Food Facts.
-     */
+    console.log(
+        "🟡 PRODUCTO NO ENCONTRADO. BUSCANDO EN OPEN FOOD FACTS..."
+    );
 
     mostrarMensajeScanner(
         "Producto no encontrado. Buscando..."
